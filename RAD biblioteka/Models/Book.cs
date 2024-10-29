@@ -13,7 +13,7 @@ namespace RAD_biblioteka.Models
         public string? Publisher { get; set; }
 
         [DataType(DataType.Date)]
-        public DataType PublicationDate { get; set; }
+        public DateTime PublicationDate { get; set; }
 
         public int? Price { get; set; }
 
