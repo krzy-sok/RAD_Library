@@ -20,11 +20,34 @@ namespace RAD_biblioteka.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string bookStatus, string searchString)
         {
-              return _context.Book != null ? 
-                          View(await _context.Book.ToListAsync()) :
-                          Problem("Entity set 'RAD_bibliotekaContext.Book'  is null.");
+            IQueryable<string> stausQuery = from b in _context.Book orderby b.Status select b.Status;
+            var books = from b in _context.Book select b;
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                var authors = from b in _context.Book select b;
+                books = books.Where(s => s.Title!.Contains(searchString));
+                authors = authors.Where(s => s.Author!.Contains(searchString));
+                books = books.Concat(authors).Distinct();
+            }
+            if (!string.IsNullOrEmpty(bookStatus))
+            {
+                books = books.Where(x => x.Status == bookStatus);
+            }
+            var bookStatusVM = new BookStausViewModel
+            {
+                Statuses = new SelectList(await stausQuery.Distinct().ToListAsync()),
+                Books = await books.ToListAsync()
+            };
+
+            //return View(await books.ToArrayAsync());
+
+            return View(bookStatusVM);
+              //return _context.Book != null ? 
+              //            View(await _context.Book.ToListAsync()) :
+              //            Problem("Entity set 'RAD_bibliotekaContext.Book'  is null.");
         }
 
         // GET: Books/Details/5

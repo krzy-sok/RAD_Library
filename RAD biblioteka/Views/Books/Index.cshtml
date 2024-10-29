@@ -1,4 +1,5 @@
-﻿@model IEnumerable<RAD_biblioteka.Models.Book>
+﻿@*model IEnumerable<RAD_biblioteka.Models.Book>*@
+@model RAD_biblioteka.Models.BookStausViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,32 +10,62 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+<form asp-controller="Books" asp-action="Index" method="get">
+    <p>
+        <select asp-for="BookStatus" asp-items="Model.Statuses">
+            <option value="">All</option>
+        </select>
+        <label>Title: <input type="text" name="searchString"/> </label>
+        <input type="submit" value="Filter" />
+    </p>
+</form>
 <table class="table">
     <thead>
+        @*
+        <th>
+        @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+        @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+        @Html.DisplayNameFor(model => model.Publisher)
+        </th>
+        <th>
+        @Html.DisplayNameFor(model => model.PublicationDate)
+        </th>
+        <th>
+        @Html.DisplayNameFor(model => model.Price)
+        </th>
+        <th>
+        @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th></th>
+        *@
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.Books[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Author)
+                @Html.DisplayNameFor(model => model.Books[0].Author)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Publisher)
+                @Html.DisplayNameFor(model => model.Books[0].Publisher)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PublicationDate)
+                @Html.DisplayNameFor(model => model.Books[0].PublicationDate)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+                @Html.DisplayNameFor(model => model.Books[0].Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+                @Html.DisplayNameFor(model => model.Books[0].Status)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Books) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)

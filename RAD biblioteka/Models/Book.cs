@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RAD_biblioteka.Models
 {
@@ -12,12 +13,15 @@ namespace RAD_biblioteka.Models
 
         public string? Publisher { get; set; }
 
+
+        [Display(Name = "Publication Date")]
         [DataType(DataType.Date)]
         public DateTime PublicationDate { get; set; }
 
-        public int? Price { get; set; }
+        [Column(TypeName ="decimal(18, 2)")]
+        public decimal? Price { get; set; }
 
-        public string? Status { get; set; }
+        public string Status { get; set; }
 
     }
 }

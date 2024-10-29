@@ -25,19 +25,29 @@ namespace RAD_biblioteka.Models
                         Author = "Terry Prachet",
                         Publisher = "Corgi",
                         PublicationDate = DateTime.Parse("1998-01-01"),
-                        Price = 8,
+                        Price = 8.0M,
                         Status = "Available",
 
                     },
                     new Book
                     {
                         Title = "The Hitchiker's Guide to the Galaxy",
-                        Author = "Diuglas Adams",
+                        Author = "Douglas Adams",
                         Publisher = "Megadodo Publications",
                         PublicationDate = DateTime.Parse("1979-01-01"),
-                        Price = 42,
+                        Price = 42.0M,
                         Status = "Available",
                        
+                    },
+                    new Book
+                    {
+                        Title = "Dune",
+                        Author = "Frank Herbert",
+                        Publisher = "Rebis",
+                        PublicationDate = DateTime.Parse("2024-01-01"),
+                        Price = 49.90M,
+                        Status = "Leased",
+
                     }
                 );
                 context.SaveChanges();
