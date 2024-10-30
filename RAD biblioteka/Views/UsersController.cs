@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RAD_biblioteka.Data;
 using RAD_biblioteka.Models;
+using System.Security.Cryptography;
+using System.Collections;
+using System.Text;
+
 
 namespace RAD_biblioteka.Views
 {
@@ -17,6 +21,16 @@ namespace RAD_biblioteka.Views
         public UsersController(RAD_bibliotekaContext context)
         {
             _context = context;
+        }
+
+        public string HashPasswd(string passwd)
+        {
+            SHA256 sha256 = SHA256Managed.Create();
+            byte[] hashValue;
+            UTF8Encoding objUtf8 = new UTF8Encoding();
+            hashValue = sha256.ComputeHash(objUtf8.GetBytes(passwd));
+
+            return Encoding.UTF8.GetString(hashValue);
         }
 
         // GET: Users
@@ -60,6 +74,7 @@ namespace RAD_biblioteka.Views
         {
             if (ModelState.IsValid)
             {
+                user.password=  HashPasswd(user.password);
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
