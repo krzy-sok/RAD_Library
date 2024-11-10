@@ -50,6 +50,7 @@ namespace RAD_biblioteka.Controllers
                 user.phoneNumber = model.phoneNumber;
                 user.userName = model.userName;
                 user.password = HashPasswd(model.password);
+                user.admin = false;
 
                 try
                 {

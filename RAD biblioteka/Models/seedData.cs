@@ -1,4 +1,5 @@
 ﻿using RAD_biblioteka.Data;
+using RAD_biblioteka.Controllers;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -51,15 +52,21 @@ namespace RAD_biblioteka.Models
                 }
                 if (!context.User.Any())
                 {
+                    UserController controller = new UserController(context);
                     context.User.Add(
                         new User
                         {
                             userName = "Librarian",
-                            password = "library"
+                            password = controller.HashPasswd("librarian"),
+                            firstName = "John",
+                            lastName = "Doe",
+                            email = "librarian@offical",
+                            admin = true
                         }
                     ); 
                 }
                 context.SaveChanges();
+
                 return;
             }
         }

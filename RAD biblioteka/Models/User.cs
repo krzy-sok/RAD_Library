@@ -19,5 +19,7 @@ namespace RAD_biblioteka.Models
         public string? phoneNumber { get; set; }
 
         public string password { get; set; }
+
+        public bool admin { get; set; }
     }
 }
