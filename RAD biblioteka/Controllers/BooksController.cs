@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RAD_biblioteka.Data;
 using RAD_biblioteka.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RAD_biblioteka.Controllers
 {
@@ -69,6 +70,7 @@ namespace RAD_biblioteka.Controllers
         }
 
         // GET: Books/Create
+        [Authorize(Policy = "Librarian")]
         public IActionResult Create()
         {
             return View();
@@ -79,6 +81,7 @@ namespace RAD_biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Create([Bind("Id,Title,Author,Publisher,PublicationDate,Price,Status")] Book book)
         {
             if (ModelState.IsValid)
@@ -90,7 +93,8 @@ namespace RAD_biblioteka.Controllers
             return View(book);
         }
 
-        // GET: Books/Edit/5
+        // GET: Books/Edit/
+         [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Book == null)
@@ -111,6 +115,7 @@ namespace RAD_biblioteka.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Publisher,PublicationDate,Price,Status")] Book book)
         {
             if (id != book.Id)
@@ -142,6 +147,7 @@ namespace RAD_biblioteka.Controllers
         }
 
         // GET: Books/Delete/5
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Book == null)
@@ -162,6 +168,7 @@ namespace RAD_biblioteka.Controllers
         // POST: Books/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Book == null)
