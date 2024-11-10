@@ -90,14 +90,18 @@ namespace RAD_biblioteka.Controllers
                         new Claim("Name", user.firstName),
                         new Claim(ClaimTypes.Role, "User")
                     };
-
+                    //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions();
+                    //cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                    //cookieOptions.SlidingExpiration = true;
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    //Console.WriteLine(CookieAuthenticationDefaults.AuthenticationScheme);
+                    //var claimsIdentity = new ClaimsIdentity(claim);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                     return RedirectToAction("Index");
                 }
                 else
-                {
+                { 
                     ModelState.AddModelError("", "Incorrect login data");
                 }
             }
@@ -107,7 +111,7 @@ namespace RAD_biblioteka.Controllers
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         [Authorize]

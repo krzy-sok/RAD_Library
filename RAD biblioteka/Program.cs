@@ -11,7 +11,15 @@ builder.Services.AddDbContext<RAD_bibliotekaContext>(options =>
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+builder.Services.AddAuthentication(
+    CookieAuthenticationDefaults.AuthenticationScheme
+    ).AddCookie(options =>
+    {
+        //options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+        options.SlidingExpiration = true;
+    }
+    );
 
 var app = builder.Build();
 
