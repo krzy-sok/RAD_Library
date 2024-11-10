@@ -10,7 +10,7 @@ using RAD_biblioteka.Models;
 using System.Security.Cryptography;
 using System.Collections;
 using System.Text;
-
+using Microsoft.AspNetCore.Authorization;
 
 namespace RAD_biblioteka.Views
 {
@@ -23,16 +23,7 @@ namespace RAD_biblioteka.Views
             _context = context;
         }
 
-        public string HashPasswd(string passwd)
-        {
-            SHA256 sha256 = SHA256Managed.Create();
-            byte[] hashValue;
-            UTF8Encoding objUtf8 = new UTF8Encoding();
-            hashValue = sha256.ComputeHash(objUtf8.GetBytes(passwd));
-
-            return Encoding.UTF8.GetString(hashValue);
-        }
-
+        [Authorize(Policy = "Librarian")]
         // GET: Users
         public async Task<IActionResult> Index()
         {
@@ -41,6 +32,8 @@ namespace RAD_biblioteka.Views
                           Problem("Entity set 'RAD_bibliotekaContext.User'  is null.");
         }
 
+
+        [Authorize(Policy = "Librarian")]
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -59,6 +52,7 @@ namespace RAD_biblioteka.Views
             return View(user);
         }
 
+        [Authorize(Policy = "Librarian")]
         // GET: Users/Create
         public IActionResult Create()
         {
@@ -70,11 +64,12 @@ namespace RAD_biblioteka.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Create([Bind("Id,userName,firstName,lastName,email,phoneNumber,password")] User user)
         {
             if (ModelState.IsValid)
             {
-                user.password=  HashPasswd(user.password);
+                user.password=  user.password;
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -83,6 +78,7 @@ namespace RAD_biblioteka.Views
         }
 
         // GET: Users/Edit/5
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.User == null)
@@ -103,6 +99,7 @@ namespace RAD_biblioteka.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,userName,firstName,lastName,email,phoneNumber,password")] User user)
         {
             if (id != user.Id)
@@ -154,6 +151,7 @@ namespace RAD_biblioteka.Views
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.User == null)

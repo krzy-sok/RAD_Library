@@ -21,6 +21,11 @@ builder.Services.AddAuthentication(
     }
     );
 
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("Librarian", policy => policy.RequireRole("Admin"));
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

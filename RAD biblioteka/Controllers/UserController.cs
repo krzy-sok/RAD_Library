@@ -83,19 +83,21 @@ namespace RAD_biblioteka.Controllers
                 var user = _context.User.Where(x => (x.userName == model.userNameOrEmail || x.email == model.userNameOrEmail) && x.password == hash).FirstOrDefault();
                 if(user != null)
                 {
-                    //success add cookie
+                    //success add cooki
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Name, user.email),
                         new Claim("Name", user.firstName),
-                        new Claim(ClaimTypes.Role, "User")
+                        //new Claim(ClaimTypes.Role, "User")
                     };
-                    //CookieAuthenticationOptions cookieOptions = new CookieAuthenticationOptions();
-                    //cookieOptions.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-                    //cookieOptions.SlidingExpiration = true;
+                    if (user.admin == true) {
+                        claims.Add(new Claim(ClaimTypes.Role, "Admin"));
+                    }
+                    else
+                    {
+                        claims.Add(new Claim(ClaimTypes.Role, "User"));
+                    }
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    //Console.WriteLine(CookieAuthenticationDefaults.AuthenticationScheme);
-                    //var claimsIdentity = new ClaimsIdentity(claim);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
                     return RedirectToAction("Index");
