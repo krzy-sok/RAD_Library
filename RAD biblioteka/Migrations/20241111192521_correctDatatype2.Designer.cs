@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RAD_biblioteka.Data;
 
@@ -11,9 +12,10 @@ using RAD_biblioteka.Data;
 namespace RAD_biblioteka.Migrations
 {
     [DbContext(typeof(RAD_bibliotekaContext))]
-    partial class RAD_bibliotekaContextModelSnapshot : ModelSnapshot
+    [Migration("20241111192521_correctDatatype2")]
+    partial class correctDatatype2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,7 +55,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Book", (string)null);
+                    b.ToTable("Book");
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.Leases", b =>
@@ -82,7 +84,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Leases", (string)null);
+                    b.ToTable("Leases");
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.RegistrationViewModel", b =>
@@ -119,7 +121,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RegistrationViewModel", (string)null);
+                    b.ToTable("RegistrationViewModel");
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.User", b =>
@@ -159,7 +161,7 @@ namespace RAD_biblioteka.Migrations
                     b.HasIndex("email")
                         .IsUnique();
 
-                    b.ToTable("User", (string)null);
+                    b.ToTable("User");
                 });
 #pragma warning restore 612, 618
         }

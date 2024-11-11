@@ -8,7 +8,9 @@ namespace RAD_biblioteka.Models
         public int Id { get; set; }
         [DataType(DataType.Date)]
         public DateTime leaseStart { get; set; }
-        public DataType? leaseEnd { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime leaseEnd { get; set; }
 
         // add book and user fk
         [ForeignKey("Book")]
@@ -16,6 +18,8 @@ namespace RAD_biblioteka.Models
 
         [ForeignKey("User")]
         public int UserId { get; set; }
+
+        public string Type { get; set;  }
 
     }
 }

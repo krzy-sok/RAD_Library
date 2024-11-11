@@ -207,6 +207,18 @@ namespace RAD_biblioteka.Controllers
                 var book = await _context.Book.FindAsync(id);
                 book.Status = "Reserved";
                 _context.Update(book);
+
+                var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
+
+                var lease = new Leases();
+                lease.leaseStart = DateTime.Today;
+                lease.leaseEnd = DateTime.Today.AddDays(1);
+                lease.BookId = id.Value;
+                lease.UserId = user.Id;
+                lease.Type = "Reservation";
+                _context.Add(lease);
+
+
                 _context.SaveChanges();
             }
 
