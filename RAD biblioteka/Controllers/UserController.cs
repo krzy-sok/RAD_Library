@@ -29,8 +29,14 @@ namespace RAD_biblioteka.Controllers
 
             return Encoding.UTF8.GetString(hashValue);
         }
+
+        [Authorize]
         public IActionResult Index()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -127,6 +133,7 @@ namespace RAD_biblioteka.Controllers
             return View();
         }
 
+        [Authorize]
         public async Task<IActionResult> Delete()
         {
             //if (id == null || _context.User == null)
@@ -147,6 +154,7 @@ namespace RAD_biblioteka.Controllers
         //POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
         {
             string hash = HashPasswd(model.password);
@@ -162,13 +170,14 @@ namespace RAD_biblioteka.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(int id)
-        {
-            Console.WriteLine("***************\n");
-            Console.WriteLine(id);
-            Console.WriteLine("***************\n");
-            return View();
-        }
+        //[Authorize]
+        //public IActionResult Edit(int id)
+        //{
+        //    Console.WriteLine("***************\n");
+        //    Console.WriteLine(id);
+        //    Console.WriteLine("***************\n");
+        //    return View();
+        //}
 
         //private bool UserExists(int id)
         //{
