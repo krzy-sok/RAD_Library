@@ -86,8 +86,12 @@ namespace RAD_biblioteka.Controllers
                     //success add cooki
                     var claims = new List<Claim>
                     {
-                        new Claim(ClaimTypes.Name, user.email),
-                        new Claim("Name", user.firstName),
+                        new Claim(ClaimTypes.Email, user.email),
+                        new Claim(ClaimTypes.Name, user.firstName),
+                        new Claim(ClaimTypes.GivenName, user.userName),
+                        new Claim(ClaimTypes.Surname, user.lastName),
+                        //new Claim(ClaimTypes.MobilePhone, user.phoneNumber)
+                        new Claim("id", user.Id.ToString())
                         //new Claim(ClaimTypes.Role, "User")
                     };
                     if (user.admin == true) {
@@ -122,5 +126,53 @@ namespace RAD_biblioteka.Controllers
             ViewBag.Name = HttpContext.User.Identity.Name;
             return View();
         }
+
+        public async Task<IActionResult> Delete()
+        {
+            //if (id == null || _context.User == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var user = await _context.User
+            //    .FirstOrDefaultAsync(m => m.Id == id);
+            //if (user == null)
+            //{
+            //    return NotFound();
+            //}
+
+            return View();
+        }
+
+        //POST: Users/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
+        {
+            string hash = HashPasswd(model.password);
+            var user = _context.User.Where(x => (x.email == model.userEmail) && x.password == hash).FirstOrDefault();
+            if(user != null)
+            {
+                HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                _context.User.Remove(user);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index", "Home");
+            }
+            ModelState.AddModelError("", "Incorect user credentials");
+            return View(model);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            Console.WriteLine("***************\n");
+            Console.WriteLine(id);
+            Console.WriteLine("***************\n");
+            return View();
+        }
+
+        //private bool UserExists(int id)
+        //{
+        //  return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
+        //}
     }
 }
