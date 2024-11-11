@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RAD_biblioteka.Models
 {
-    //[Index(nameof(email), IsUnique = true)]
+    [Index(nameof(email), IsUnique = true)]
     //[Index(nameof(userName), IsUnique = true)]
     public class User
     {
