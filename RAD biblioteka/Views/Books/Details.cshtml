@@ -49,6 +49,10 @@
     </dl>
 </div>
 <div>
+    @if (!User.IsInRole("Admin") && User.Identity.IsAuthenticated)
+    {
+        <a asp-action="Reserve" asp-route-id="@Model?.Id">Reserve</a>
+    }
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    |<a asp-action="Index">Back to List</a>
 </div>

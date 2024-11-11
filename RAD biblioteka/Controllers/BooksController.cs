@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using RAD_biblioteka.Data;
 using RAD_biblioteka.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace RAD_biblioteka.Controllers
 {
@@ -188,6 +189,28 @@ namespace RAD_biblioteka.Controllers
         private bool BookExists(int id)
         {
           return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        public async Task<IActionResult> Reserve(int? id)
+        {
+            var email = User.Claims.Where(c=>c.Type == ClaimTypes.Email).FirstOrDefault().Value;
+            //Console.WriteLine("******************\n");
+            //Console.WriteLine(email);
+            //Console.WriteLine("\n******************\n");
+
+            Console.WriteLine("******************\n");
+            Console.WriteLine(id);
+            Console.WriteLine("\n******************\n");
+
+            if(id != null && email != null)
+            {
+                var book = await _context.Book.FindAsync(id);
+                book.Status = "Reserved";
+                _context.Update(book);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Details", new { id = id });
         }
     }
 }

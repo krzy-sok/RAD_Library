@@ -95,10 +95,6 @@
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
                     <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 }
-                @if (!User.IsInRole("Admin") && User.Identity.IsAuthenticated)
-                {
-                    <a asp-action="Reserve" asp-route-id="@item.Id">Reserve</a>
-                }
             </td>
         </tr>
 }
