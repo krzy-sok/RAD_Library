@@ -6,7 +6,7 @@
 @if(Context.User.Identity.Name != null){
     <form class="navbar-right" asp-controller="User" asp-action="LogOut" method="post" id="logoutForm">
         <ul class="nav navbar-nav navbar-right">
-            <li>Hello @Context.User.Identity.Name</li>
+            <li><a class="nav-link" asp-controller="User" asp-action="Index"> Hello @Context.User.Identity.Name</a></li>
             <li><button type="submit" class="btn btn-link navbar-btn navbar-link">Log off</button></li>
         </ul>
     </form>
