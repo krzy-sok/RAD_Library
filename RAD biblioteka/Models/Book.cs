@@ -23,5 +23,7 @@ namespace RAD_biblioteka.Models
 
         public string Status { get; set; }
 
+        public bool Hidden { get; set; }
+
     }
 }

@@ -41,10 +41,19 @@
         </nav>
     </header>
     <div class="container">
+        @if (TempData["result"] != null)
+        {
+            <div class="form-group" style="color: green;">@TempData["result"]</div>
+        }
+        @if (TempData["error"] != null)
+        {
+            <div class="form-group" style="color: red;">@TempData["error"]</div>
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
+
 
     <footer class="border-top footer text-muted">
         <div class="container">

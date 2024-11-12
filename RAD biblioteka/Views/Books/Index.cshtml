@@ -44,6 +44,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Books[0].Status)
             </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.DisplayNameFor(model => model.Books[0].Hidden)
+                </td>
+            }
             <th></th>
         </tr>
     </thead>
@@ -68,6 +74,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Status)
             </td>
+            @if (User.IsInRole("Admin"))
+            {
+            <td>
+                @Html.DisplayFor(modelItem => item.Hidden)
+            </td>
+            }
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
 

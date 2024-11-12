@@ -26,6 +26,10 @@ namespace RAD_biblioteka.Controllers
         {
             IQueryable<string> stausQuery = from b in _context.Book orderby b.Status select b.Status;
             var books = from b in _context.Book select b;
+            if (!User.IsInRole("Admin"))
+            {
+                books = books.Where(b => b.Hidden == false);
+            }
 
             if (!String.IsNullOrEmpty(searchString))
             {
@@ -85,6 +89,7 @@ namespace RAD_biblioteka.Controllers
         [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Create([Bind("Id,Title,Author,Publisher,PublicationDate,Price,Status")] Book book)
         {
+            book.Hidden = false;
             if (ModelState.IsValid)
             {
                 _context.Add(book);
@@ -177,9 +182,24 @@ namespace RAD_biblioteka.Controllers
                 return Problem("Entity set 'RAD_bibliotekaContext.Book'  is null.");
             }
             var book = await _context.Book.FindAsync(id);
+            if (book.Status != "Available")
+            {
+                TempData["error"] = $"Book {book.Title} cannot be deleted now";
+                return RedirectToAction(nameof(Index));
+            }
             if (book != null)
             {
-                _context.Book.Remove(book);
+                if (_context.Leases.Where(l => l.book == book).ToList().Count() != 0)
+                {
+                    book.Hidden = true;
+                    _context.Book.Update(book);
+                    TempData["result"] = $"Book {book.Title} has been hidden";
+                }
+                else
+                {
+                    _context.Book.Remove(book);
+                    TempData["result"] = $"Book {book.Title} has been deleted";
+                }
             }
             
             await _context.SaveChangesAsync();

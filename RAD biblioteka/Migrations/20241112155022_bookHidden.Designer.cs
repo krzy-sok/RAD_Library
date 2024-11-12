@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RAD_biblioteka.Data;
 
@@ -11,9 +12,10 @@ using RAD_biblioteka.Data;
 namespace RAD_biblioteka.Migrations
 {
     [DbContext(typeof(RAD_bibliotekaContext))]
-    partial class RAD_bibliotekaContextModelSnapshot : ModelSnapshot
+    [Migration("20241112155022_bookHidden")]
+    partial class bookHidden
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

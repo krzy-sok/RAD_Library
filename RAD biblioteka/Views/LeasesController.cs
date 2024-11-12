@@ -157,7 +157,7 @@ namespace RAD_biblioteka.Views
                 _context.Leases.Add(newLease);
                 _context.Leases.Update(lease);
                 _context.Book.Update(book);
-                TempData["result"] = $"Chenged reservation of {book.Title} to Lease";
+                TempData["result"] = $"Changed reservation of {book.Title} to Lease";
                 _context.SaveChanges();
             }
 
