@@ -7,6 +7,7 @@
 <h1>Edit</h1>
 
 <h4>Leases</h4>
+
 <hr />
 <dl class="row">
     <dt class = "col-sm-2">
@@ -56,12 +57,12 @@
 @if (Model.Type == "Reservation")
 {
     <div>
-        <a asp-action="Lease">Change to Lease</a>
+        <a asp-action="Lease" asp-route-id="@Model?.Id">Change to Lease</a>
     </div>
 }
 @if(Model.Type == "Lease"){
     <div>
-        <a asp-action="Return">Return Book</a>
+        <a asp-action="Return" asp-route-id="@Model?.Id">Return Book</a>
     </div>
 }
 <div>

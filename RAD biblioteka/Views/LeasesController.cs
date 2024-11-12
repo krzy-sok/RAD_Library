@@ -172,6 +172,73 @@ namespace RAD_biblioteka.Views
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Lease(int? id)
+        {
+            if (_context.Leases == null)
+            {
+                return Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
+            }
+            if (_context.Book == null)
+            {
+                return Problem("Entity set 'RAD_bibliotekaContext.Book'  is null.");
+            }
+            if (id != null)
+            {
+                Leases lease = _context.Leases.Include(b => b.book).Include(u => u.user).FirstOrDefault(l => l.Id == id);
+                Book book = lease.book;
+                lease.Active = false;
+                lease.leaseEnd = DateTime.Today;
+                Leases newLease = new Leases();
+                newLease.leaseStart = DateTime.Today;
+                newLease.book = book;
+                newLease.user = lease.user;
+                newLease.Active = true;
+                newLease.Type = "Lease";
+
+                book.Status = "Leased";
+
+                _context.Leases.Add(newLease);
+                _context.Leases.Update(lease);
+                _context.Book.Update(book);
+                TempData["result"] = $"Chenged reservation of {book.Title} to Lease";
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> Return(int? id)
+        {
+            if (_context.Leases == null)
+            {
+                return Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
+            }
+            if (_context.Book == null)
+            {
+                return Problem("Entity set 'RAD_bibliotekaContext.Book'  is null.");
+            }
+            if (id != null)
+            {
+                Leases lease = _context.Leases.Include(b => b.book).FirstOrDefault(l => l.Id == id);
+                Book book = lease.book;
+                book.Status = "Available";
+                lease.Active = false;
+                lease.leaseEnd = DateTime.Today;
+
+
+                _context.Leases.Update(lease);
+                _context.Book.Update(book);
+                TempData["result"] = $"Removed lease of {book.Title}";
+                _context.SaveChanges();
+            }
+            else
+            {
+                return Problem("lease id not provided");
+            }
+
+            return RedirectToAction("Index");
+        }
+
         private bool LeasesExists(int id)
         {
           return (_context.Leases?.Any(e => e.Id == id)).GetValueOrDefault();

@@ -45,7 +45,7 @@ namespace RAD_biblioteka.Models
                             Publisher = "Rebis",
                             PublicationDate = DateTime.Parse("2024-01-01"),
                             Price = 49.90M,
-                            Status = "Leased",
+                            Status = "Available",
 
                         }
                     );
