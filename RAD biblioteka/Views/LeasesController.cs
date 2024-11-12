@@ -89,7 +89,7 @@ namespace RAD_biblioteka.Views
                 return NotFound();
             }
 
-            var leases = await _context.Leases.FindAsync(id);
+            var leases =  _context.Leases.Include(b => b.book).Include(u => u.user).FirstOrDefault(l => l.Id == id);
             if (leases == null)
             {
                 return NotFound();
