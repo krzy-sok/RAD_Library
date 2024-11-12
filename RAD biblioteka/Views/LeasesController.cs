@@ -25,8 +25,16 @@ namespace RAD_biblioteka.Views
         public async Task<IActionResult> Index()
         {
               return _context.Leases != null ? 
-                          View(await _context.Leases.Include(b => b.book).Include(u => u.user).ToListAsync()) :
+                          View(await _context.Leases.Where(l => l.Active == true).Include(b => b.book).Include(u => u.user).ToListAsync()) :
                           Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
+        }
+
+        [Authorize(Policy = "Librarian")]
+        public async Task<IActionResult> Inactive()
+        {
+            return _context.Leases != null ?
+                        View(await _context.Leases.Where(l => l.Active == false).Include(b => b.book).Include(u => u.user).ToListAsync()) :
+                        Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
         }
 
         // GET: Leases/Details/5
