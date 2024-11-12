@@ -28,6 +28,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Books" asp-action="Index">Catalouge</a>
                         </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Leases" asp-action="Index">Book Leases</a>
+                            </li>
+                        }
                     </ul>
                     @await Html.PartialAsync("_LoginPartial")
                 </div>

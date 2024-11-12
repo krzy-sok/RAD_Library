@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RAD_biblioteka.Models.Leases>
+﻿@model IEnumerable<RAD_biblioteka.Models.LeaseViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,9 +6,6 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -19,10 +16,10 @@
                 @Html.DisplayNameFor(model => model.leaseEnd)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BookId)
+                @Html.DisplayNameFor(model => model.book.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserId)
+                @Html.DisplayNameFor(model => model.user.userName)
             </th>
             <th></th>
         </tr>
@@ -37,10 +34,10 @@
                 @Html.DisplayFor(modelItem => item.leaseEnd)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BookId)
+                @Html.DisplayFor(modelItem => item.book.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UserId)
+                @Html.DisplayFor(modelItem => item.user.userName)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

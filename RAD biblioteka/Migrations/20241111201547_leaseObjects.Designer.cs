@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RAD_biblioteka.Data;
 
@@ -11,9 +12,10 @@ using RAD_biblioteka.Data;
 namespace RAD_biblioteka.Migrations
 {
     [DbContext(typeof(RAD_bibliotekaContext))]
-    partial class RAD_bibliotekaContextModelSnapshot : ModelSnapshot
+    [Migration("20241111201547_leaseObjects")]
+    partial class leaseObjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,11 +66,14 @@ namespace RAD_biblioteka.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("BookId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Type")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("bookId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("leaseEnd")
@@ -77,14 +82,11 @@ namespace RAD_biblioteka.Migrations
                     b.Property<DateTime>("leaseStart")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("userId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("bookId");
+                    b.HasIndex("BookId");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Leases");
                 });
@@ -170,13 +172,13 @@ namespace RAD_biblioteka.Migrations
                 {
                     b.HasOne("RAD_biblioteka.Models.Book", "book")
                         .WithMany()
-                        .HasForeignKey("bookId")
+                        .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("RAD_biblioteka.Models.User", "user")
                         .WithMany()
-                        .HasForeignKey("userId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

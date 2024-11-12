@@ -13,11 +13,9 @@ namespace RAD_biblioteka.Models
         public DateTime leaseEnd { get; set; }
 
         // add book and user fk
-        [ForeignKey("Book")]
-        public int BookId { get; set; }
+        public Book book { get; set; }
 
-        [ForeignKey("User")]
-        public int UserId { get; set; }
+        public User user { get; set; }
 
         public string Type { get; set;  }
 

@@ -51,7 +51,7 @@ namespace RAD_biblioteka.Controllers
             {
                 User user = new User();
                 user.firstName = model.firstName;
-                user.email = model.email;  
+                user.email = model.email;
                 user.lastName = model.lastName;
                 user.phoneNumber = model.phoneNumber;
                 user.userName = model.userName;
@@ -66,7 +66,7 @@ namespace RAD_biblioteka.Controllers
                     ModelState.Clear();
                     ViewBag.Message = $"{user.userName} registerd succesfully";
                 }
-                catch(DbUpdateException ex)
+                catch (DbUpdateException ex)
                 {
                     ModelState.AddModelError("", "User with that email already exists!");
                     return View(model);
@@ -87,7 +87,7 @@ namespace RAD_biblioteka.Controllers
             {
                 string hash = HashPasswd(model.password);
                 var user = _context.User.Where(x => (x.userName == model.userNameOrEmail || x.email == model.userNameOrEmail) && x.password == hash).FirstOrDefault();
-                if(user != null)
+                if (user != null)
                 {
                     //success add cooki
                     var claims = new List<Claim>
@@ -100,7 +100,8 @@ namespace RAD_biblioteka.Controllers
                         new Claim("id", user.Id.ToString())
                         //new Claim(ClaimTypes.Role, "User")
                     };
-                    if (user.admin == true) {
+                    if (user.admin == true)
+                    {
                         claims.Add(new Claim(ClaimTypes.Role, "Admin"));
                     }
                     else
@@ -113,7 +114,7 @@ namespace RAD_biblioteka.Controllers
                     return RedirectToAction("Index");
                 }
                 else
-                { 
+                {
                     ModelState.AddModelError("", "Incorrect login data");
                 }
             }
@@ -159,7 +160,7 @@ namespace RAD_biblioteka.Controllers
         {
             string hash = HashPasswd(model.password);
             var user = _context.User.Where(x => (x.email == model.userEmail) && x.password == hash).FirstOrDefault();
-            if(user != null)
+            if (user != null)
             {
                 HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 _context.User.Remove(user);
@@ -168,6 +169,17 @@ namespace RAD_biblioteka.Controllers
             }
             ModelState.AddModelError("", "Incorect user credentials");
             return View(model);
+        }
+
+        // GET: Leases
+        [Authorize(Policy = "Librarian")]
+        public async Task<IActionResult> UserLeases()
+        {
+            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
+            var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
+            return _context.Leases != null ?
+                        View(await _context.Leases.Where(l => l.user == user).ToListAsync()) :
+                        Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
         }
 
         //[Authorize]

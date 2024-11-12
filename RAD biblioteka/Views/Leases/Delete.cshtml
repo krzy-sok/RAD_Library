@@ -24,17 +24,17 @@
             @Html.DisplayFor(model => model.leaseEnd)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BookId)
+        @Html.DisplayNameFor(model => model.book.Title)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BookId)
+            @Html.DisplayFor(model => model.book.Title)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
+            @Html.DisplayNameFor(model => model.user.userName)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
+        @Html.DisplayFor(model => model.user.userName)
+        </dd> 
     </dl>
     
     <form asp-action="Delete">

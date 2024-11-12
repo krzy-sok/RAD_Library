@@ -213,8 +213,8 @@ namespace RAD_biblioteka.Controllers
                 var lease = new Leases();
                 lease.leaseStart = DateTime.Today;
                 lease.leaseEnd = DateTime.Today.AddDays(1);
-                lease.BookId = id.Value;
-                lease.UserId = user.Id;
+                lease.book = book;
+                lease.user = user;
                 lease.Type = "Reservation";
                 _context.Add(lease);
 
