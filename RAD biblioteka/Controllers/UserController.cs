@@ -33,7 +33,7 @@ namespace RAD_biblioteka.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            if (User.Identity.IsAuthenticated)
+            if (!User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -172,7 +172,6 @@ namespace RAD_biblioteka.Controllers
         }
 
         // GET: Leases
-        [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> UserLeases()
         {
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
