@@ -216,6 +216,7 @@ namespace RAD_biblioteka.Controllers
                 lease.book = book;
                 lease.user = user;
                 lease.Type = "Reservation";
+                lease.Active = true;
                 _context.Add(lease);
 
 

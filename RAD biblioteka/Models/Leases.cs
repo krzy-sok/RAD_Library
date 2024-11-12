@@ -13,11 +13,13 @@ namespace RAD_biblioteka.Models
         public DateTime leaseEnd { get; set; }
 
         // add book and user fk
-        public Book book { get; set; }
+        public virtual Book book { get; set; }
 
-        public User user { get; set; }
+        public virtual User user { get; set; }
 
         public string Type { get; set;  }
+
+        public bool Active { get; set; }
 
     }
 }

@@ -176,9 +176,38 @@ namespace RAD_biblioteka.Controllers
         {
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
+            var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).ToListAsync();
             return _context.Leases != null ?
-                        View(await _context.Leases.Where(l => l.user == user).ToListAsync()) :
+                        View(UserLeases) :
                         Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
+        }
+
+        public async Task<IActionResult> Unlease(int? id)
+        {
+            if (id != null)
+            {
+                Leases lease = _context.Leases.Where(l => l.Id == id).Include(b => b.book).FirstOrDefault();
+                lease.Active = false;
+                _context.Leases.Update(lease);
+
+                Book book = _context.Book.Where(b => b.Id == lease.book.Id).FirstOrDefault();
+                
+                if(book != null)
+                {
+                    book.Status = "Available";
+                    _context.Book.Update(book);
+                    _context.SaveChanges();
+                    TempData["result"] = $"Removed reservation of {book.Title}";
+                }
+                ModelState.AddModelError("", "Book not found");
+            }
+            else
+            {
+                ModelState.AddModelError("", "Lease Id not provided");
+            }
+
+            return RedirectToAction("UserLeases");
+            //return View();
         }
 
         //[Authorize]
