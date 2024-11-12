@@ -37,49 +37,6 @@ namespace RAD_biblioteka.Views
                         Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
         }
 
-        // GET: Leases/Details/5
-        [Authorize(Policy = "Librarian")]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Leases == null)
-            {
-                return NotFound();
-            }
-
-            var leases = await _context.Leases
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (leases == null)
-            {
-                return NotFound();
-            }
-
-            return View(leases);
-        }
-
-        // GET: Leases/Create
-        //[Authorize(Policy = "Librarian")]
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        // POST: Leases/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> Create([Bind("Id,leaseStart,leaseEnd,book,user")] Leases leases)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _context.Add(leases);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(leases);
-        //}
-
         // GET: Leases/Edit/5
         [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> Edit(int? id)
