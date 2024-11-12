@@ -205,6 +205,11 @@ namespace RAD_biblioteka.Controllers
             if(id != null && email != null)
             {
                 var book = await _context.Book.FindAsync(id);
+                if (book.Status != "Available")
+                { 
+                    TempData["error"] = $"Book {book.Title} is alredy reserved";
+                    return RedirectToAction("Details", new { id = id });
+                }
                 book.Status = "Reserved";
                 _context.Update(book);
 
@@ -219,8 +224,9 @@ namespace RAD_biblioteka.Controllers
                 lease.Active = true;
                 _context.Add(lease);
 
-
                 _context.SaveChanges();
+
+                TempData["result"] = $"Book {book.Title} has been reserved";
             }
 
             return RedirectToAction("Details", new { id = id });
