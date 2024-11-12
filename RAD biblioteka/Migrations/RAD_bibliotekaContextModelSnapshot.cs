@@ -53,7 +53,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Book");
+                    b.ToTable("Book", (string)null);
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.Leases", b =>
@@ -89,7 +89,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasIndex("userId");
 
-                    b.ToTable("Leases");
+                    b.ToTable("Leases", (string)null);
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.RegistrationViewModel", b =>
@@ -126,7 +126,7 @@ namespace RAD_biblioteka.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RegistrationViewModel");
+                    b.ToTable("RegistrationViewModel", (string)null);
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.User", b =>
@@ -166,7 +166,7 @@ namespace RAD_biblioteka.Migrations
                     b.HasIndex("email")
                         .IsUnique();
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("RAD_biblioteka.Models.Leases", b =>

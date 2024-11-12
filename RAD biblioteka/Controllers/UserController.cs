@@ -176,7 +176,7 @@ namespace RAD_biblioteka.Controllers
         {
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
-            var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).ToListAsync();
+            var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToListAsync();
             return _context.Leases != null ?
                         View(UserLeases) :
                         Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
