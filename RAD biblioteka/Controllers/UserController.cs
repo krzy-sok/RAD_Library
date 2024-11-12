@@ -160,6 +160,13 @@ namespace RAD_biblioteka.Controllers
         {
             string hash = HashPasswd(model.password);
             var user = _context.User.Where(x => (x.email == model.userEmail) && x.password == hash).FirstOrDefault();
+            var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).ToListAsync();
+
+            if (UserLeases.Count != 0)
+            {
+                ModelState.AddModelError("", "Cannot delete user wieth reservations/Leases");
+                return View(model);
+            }
             if (user != null)
             {
                 HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
