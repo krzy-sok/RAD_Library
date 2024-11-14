@@ -20,6 +20,20 @@ namespace RAD_biblioteka.Controllers
         {
             _context = context;
         }
+
+        public void CheckExpiery()
+        {
+            var expired = _context.Leases.Where(l => l.Active == true && l.leaseEnd < DateTime.Today && l.Type == "Reservation").Include(b => b.book).ToList();
+            foreach (Leases lease in expired)
+            {
+                Book book = lease.book;
+                book.Status = "Available";
+                _context.Update(book);
+                lease.Active = false;
+                _context.Update(lease);
+            }
+            _context.SaveChanges();
+        }
         public string HashPasswd(string passwd)
         {
             SHA256 sha256 = SHA256Managed.Create();
@@ -148,7 +162,6 @@ namespace RAD_biblioteka.Controllers
             //{
             //    return NotFound();
             //}
-
             return View();
         }
 
@@ -160,6 +173,7 @@ namespace RAD_biblioteka.Controllers
         {
             string hash = HashPasswd(model.password);
             var user = _context.User.Where(x => (x.email == model.userEmail) && x.password == hash).FirstOrDefault();
+            CheckExpiery();
             var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).ToListAsync();
 
             if (UserLeases.Count != 0)
@@ -181,6 +195,7 @@ namespace RAD_biblioteka.Controllers
         // GET: Leases
         public async Task<IActionResult> UserLeases()
         {
+            CheckExpiery();
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
             var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToListAsync();

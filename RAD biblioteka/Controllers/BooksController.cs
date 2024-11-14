@@ -9,6 +9,8 @@ using RAD_biblioteka.Data;
 using RAD_biblioteka.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using RAD_biblioteka.Views;
+using System.Security.AccessControl;
 
 namespace RAD_biblioteka.Controllers
 {
@@ -21,10 +23,25 @@ namespace RAD_biblioteka.Controllers
             _context = context;
         }
 
+        public void CheckExpiery()
+        {
+            var expired = _context.Leases.Where(l => l.Active == true && l.leaseEnd < DateTime.Today && l.Type == "Reservation").Include(b => b.book).ToList();
+            foreach(Leases lease in expired)
+            {
+                Book book = lease.book;
+                book.Status = "Available";
+                _context.Update(book);
+                lease.Active = false;
+                _context.Update(lease);
+            }
+            _context.SaveChanges();
+        }
         // GET: Books
         public async Task<IActionResult> Index(string bookStatus, string searchString)
         {
+            CheckExpiery();
             IQueryable<string> stausQuery = from b in _context.Book orderby b.Status select b.Status;
+            
             var books = from b in _context.Book select b;
             if (!User.IsInRole("Admin"))
             {
