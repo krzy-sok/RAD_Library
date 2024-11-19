@@ -142,26 +142,8 @@ namespace RAD_biblioteka.Controllers
         }
 
         [Authorize]
-        public IActionResult LandingPage()
-        {
-            ViewBag.Name = HttpContext.User.Identity.Name;
-            return View();
-        }
-
-        [Authorize]
         public async Task<IActionResult> Delete()
         {
-            //if (id == null || _context.User == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var user = await _context.User
-            //    .FirstOrDefaultAsync(m => m.Id == id);
-            //if (user == null)
-            //{
-            //    return NotFound();
-            //}
             return View();
         }
 
@@ -229,21 +211,7 @@ namespace RAD_biblioteka.Controllers
             }
 
             return RedirectToAction("UserLeases");
-            //return View();
         }
 
-        //[Authorize]
-        //public IActionResult Edit(int id)
-        //{
-        //    Console.WriteLine("***************\n");
-        //    Console.WriteLine(id);
-        //    Console.WriteLine("***************\n");
-        //    return View();
-        //}
-
-        //private bool UserExists(int id)
-        //{
-        //  return (_context.User?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
     }
 }
