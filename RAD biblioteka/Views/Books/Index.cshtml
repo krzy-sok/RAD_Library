@@ -1,0 +1,95 @@
+﻿@*model IEnumerable<RAD_biblioteka.Models.Book>*@
+@model RAD_biblioteka.Models.BookStausViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+@if(User.IsInRole("Admin")){
+    <p>
+    <a asp-action="Create"> Create New </a>
+    </p>
+}
+
+<form asp-controller="Books" asp-action="Index" method="get">
+    <p>
+        <select asp-for="BookStatus" asp-items="Model.Statuses">
+            <option value="">All</option>
+        </select>
+        <label>Title: <input type="text" name="searchString"/> </label>
+        <input type="submit" value="Filter" />
+    </p>
+</form>
+<table class="table">
+    <thead>
+        @*
+        *@
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].Publisher)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].PublicationDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Books[0].Status)
+            </th>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.DisplayNameFor(model => model.Books[0].Hidden)
+                </td>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Books) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublicationDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
+            <td>
+                @Html.DisplayFor(modelItem => item.Hidden)
+            </td>
+            }
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
