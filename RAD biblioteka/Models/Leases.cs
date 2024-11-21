@@ -7,10 +7,10 @@ namespace RAD_biblioteka.Models
     {
         public int Id { get; set; }
         [DataType(DataType.Date)]
-        public DateTime leaseStart { get; set; }
+        public DateTime? leaseStart { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime leaseEnd { get; set; }
+        public DateTime? leaseEnd { get; set; }
 
         // add book and user fk
         public Book book { get; set; }

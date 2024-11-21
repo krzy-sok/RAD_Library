@@ -104,15 +104,22 @@ namespace RAD_biblioteka.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Librarian")]
-        public async Task<IActionResult> Create([Bind("Id,Title,Author,Publisher,PublicationDate,Price,Status")] Book book)
+        public async Task<IActionResult> Create(Book book)
         {
             book.Hidden = false;
-            if (ModelState.IsValid)
-            {
+            //book.PublicationDate = DateTime.Parse(book.PublicationDate);
+            Console.WriteLine(book.PublicationDate);
+            book.Status = "Available";
+            //if (ModelState.IsValid)
+            //{
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-            }
+            //}
+            //else
+            //{
+            //    Console.WriteLine("****************\n invalid\n");
+            //}
             return View(book);
         }
 
@@ -139,33 +146,36 @@ namespace RAD_biblioteka.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Librarian")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Author,Publisher,PublicationDate,Price,Status")] Book book)
+        public async Task<IActionResult> Edit(int id, Book book)
         {
             if (id != book.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            try
             {
-                try
-                {
-                    _context.Update(book);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookExists(book.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                //Book book2 = _context.Book.Find(id);
+
+                //book.Status = book.Status;
+                _context.Update(book);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BookExists(book.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+            //}
             return View(book);
         }
 

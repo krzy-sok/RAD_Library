@@ -60,15 +60,15 @@ namespace RAD_biblioteka.Views
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Librarian")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,leaseStart,leaseEnd,BookId,UserId")] Leases leases)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,leaseStart,leaseEnd,Book,User, Type, Active")] Leases leases)
         {
             if (id != leases.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
+            //if (ModelState.IsValid)
+            //{
                 try
                 {
                     _context.Update(leases);
@@ -84,7 +84,7 @@ namespace RAD_biblioteka.Views
                     {
                         throw;
                     }
-                }
+                //}
                 return RedirectToAction(nameof(Index));
             }
             return View(leases);

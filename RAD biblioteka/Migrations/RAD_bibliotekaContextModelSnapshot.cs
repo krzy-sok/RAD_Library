@@ -40,7 +40,7 @@ namespace RAD_biblioteka.Migrations
                     b.Property<decimal?>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("PublicationDate")
+                    b.Property<DateTime?>("PublicationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Publisher")
@@ -77,10 +77,10 @@ namespace RAD_biblioteka.Migrations
                     b.Property<int>("bookId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("leaseEnd")
+                    b.Property<DateTime?>("leaseEnd")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("leaseStart")
+                    b.Property<DateTime?>("leaseStart")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("userId")

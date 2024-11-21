@@ -16,7 +16,7 @@ namespace RAD_biblioteka.Models
 
         [Display(Name = "Publication Date")]
         [DataType(DataType.Date)]
-        public DateTime PublicationDate { get; set; }
+        public DateTime? PublicationDate { get; set; }
 
         [Column(TypeName ="decimal(18, 2)")]
         public decimal? Price { get; set; }
