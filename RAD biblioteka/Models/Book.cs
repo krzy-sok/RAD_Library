@@ -25,5 +25,6 @@ namespace RAD_biblioteka.Models
 
         public bool Hidden { get; set; }
 
+
     }
 }

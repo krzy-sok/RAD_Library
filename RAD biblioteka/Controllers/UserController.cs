@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
+using System.Data;
+using System.Xml.Serialization;
 
 namespace RAD_biblioteka.Controllers
 {
@@ -181,32 +183,52 @@ namespace RAD_biblioteka.Controllers
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
             var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToListAsync();
+            Console.WriteLine($"**************\n in user leases \n *****************");
             return _context.Leases != null ?
                         View(UserLeases) :
                         Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
         }
 
-        public async Task<IActionResult> Unlease(int? id)
+        public async Task<IActionResult> Unlease(int id, string version)
         {
+            //int id = Int32.Parse(dict["id"]);
+            //byte[] rowversion = Encoding.ASCII.GetBytes(version);
+            byte[] rowversion = System.Convert.FromBase64String(version);
             if (id != null)
             {
+                //Console.WriteLine($"**************\n {RowVersion}\n *****************");
                 Leases lease = _context.Leases.Where(l => l.Id == id).Include(b => b.book).FirstOrDefault();
+                Console.WriteLine($"**************\n id: {id} version:  \n *****************");
                 lease.Active = false;
-                _context.Leases.Update(lease);
 
-                Book book = _context.Book.Where(b => b.Id == lease.book.Id).FirstOrDefault();
-                
-                if(book != null)
+                Book book = lease.book;
+                //Book book = await _context.Book.Where(b => b.Id == lease.book.Id).FirstOrDefaultAsync();
+
+                if (book != null)
                 {
+                    //_context.Entry(lease).Property("RowVersion").OriginalValue = rowversion;
+                    Console.WriteLine($"**************\n past original value \n *****************");
                     book.Status = "Available";
-                    _context.Book.Update(book);
-                    _context.SaveChanges();
-                    TempData["result"] = $"Removed reservation of {book.Title}";
+                    try
+                    {
+                        _context.Leases.Update(lease);
+                        Console.WriteLine($"**************\n yipee \n *****************");
+                        _context.Book.Update(book);
+                        _context.SaveChanges();
+                        TempData["result"] = $"Removed reservation of {book.Title}";
+                    }
+                    catch (DbUpdateConcurrencyException ex)
+                    {
+                        Console.WriteLine($"**************\n bo womp \n *****************");
+                        TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                    }
                 }
+                Console.WriteLine($"**************\n no book??? \n *****************");
                 ModelState.AddModelError("", "Book not found");
             }
             else
             {
+                Console.WriteLine($"**************\n lease id is null \n *****************");
                 ModelState.AddModelError("", "Lease Id not provided");
             }
 

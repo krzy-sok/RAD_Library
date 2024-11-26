@@ -21,5 +21,8 @@ namespace RAD_biblioteka.Models
 
         public bool Active { get; set; }
 
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
+
     }
 }

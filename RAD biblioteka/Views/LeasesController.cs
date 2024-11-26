@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Humanizer.Localisation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -46,7 +48,7 @@ namespace RAD_biblioteka.Views
                 return NotFound();
             }
 
-            var leases =  _context.Leases.Include(b => b.book).Include(u => u.user).FirstOrDefault(l => l.Id == id);
+            var leases =  await _context.Leases.Include(b => b.book).Include(u => u.user).FirstOrDefaultAsync(l => l.Id == id);
             if (leases == null)
             {
                 return NotFound();
@@ -60,8 +62,9 @@ namespace RAD_biblioteka.Views
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Policy = "Librarian")]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,leaseStart,leaseEnd,Book,User, Type, Active")] Leases leases)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,leaseStart,leaseEnd,Book,User, Type, Active")] Leases leases, byte[] RowVersion)
         {
+            //byte[] RowVersion = Encoding.ASCII.GetBytes(version);
             if (id != leases.Id)
             {
                 return NotFound();
@@ -69,25 +72,26 @@ namespace RAD_biblioteka.Views
 
             //if (ModelState.IsValid)
             //{
-                try
+            _context.Entry(leases).Property("RowVersion").OriginalValue = RowVersion;
+            try
+            {
+                _context.Update(leases);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!LeasesExists(leases.Id))
                 {
-                    _context.Update(leases);
-                    await _context.SaveChangesAsync();
+                    return NotFound();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!LeasesExists(leases.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                }
                 //}
                 return RedirectToAction(nameof(Index));
             }
-            return View(leases);
+            return RedirectToAction("Index");
         }
 
         // GET: Leases/Delete/5
@@ -120,17 +124,28 @@ namespace RAD_biblioteka.Views
                 return Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
             }
             var leases = await _context.Leases.FindAsync(id);
+
             if (leases != null)
             {
                 _context.Leases.Remove(leases);
+                await _context.SaveChangesAsync();
+                //_context.Entry(leases).Property("RowVersion").OriginalValue = RowVersion;
+                //try 
+                //{
+
+                //}
+                //catch(DbUpdateConcurrencyException ex)
+                //{
+                //    TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                //}
             }
-            
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> Lease(int? id)
+        public async Task<IActionResult> Lease(int? id, string version)
         {
+            //byte[] RowVersion = Encoding.ASCII.GetBytes(version);
+            byte[] RowVersion = System.Convert.FromBase64String(version);
             if (_context.Leases == null)
             {
                 return Problem("Entity set 'RAD_bibliotekaContext.Leases'  is null.");
@@ -153,12 +168,20 @@ namespace RAD_biblioteka.Views
                 newLease.Type = "Lease";
 
                 book.Status = "Leased";
+                _context.Entry(lease).Property("RowVersion").OriginalValue = RowVersion;
+                try
+                {
+                    _context.Leases.Update(lease);
+                    _context.Leases.Add(newLease);
+                    _context.Book.Update(book);
+                    _context.SaveChanges();
+                    TempData["result"] = $"Changed reservation of {book.Title} to Lease";
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                }
 
-                _context.Leases.Add(newLease);
-                _context.Leases.Update(lease);
-                _context.Book.Update(book);
-                TempData["result"] = $"Changed reservation of {book.Title} to Lease";
-                _context.SaveChanges();
             }
 
             return RedirectToAction("Index");
@@ -182,11 +205,17 @@ namespace RAD_biblioteka.Views
                 lease.Active = false;
                 lease.leaseEnd = DateTime.Today;
 
-
-                _context.Leases.Update(lease);
-                _context.Book.Update(book);
-                TempData["result"] = $"Removed lease of {book.Title}";
-                _context.SaveChanges();
+                try
+                {
+                    _context.Leases.Update(lease);
+                    _context.Book.Update(book);
+                    TempData["result"] = $"Removed lease of {book.Title}";
+                    _context.SaveChanges();
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                }
             }
             else
             {

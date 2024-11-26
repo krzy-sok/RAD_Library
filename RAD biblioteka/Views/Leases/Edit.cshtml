@@ -41,6 +41,7 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="RowVersion" />
             <input type="hidden" asp-for="leaseStart" />
             <input type="hidden" asp-for="book" />
             <input type="hidden" asp-for="user" />
@@ -57,12 +58,13 @@
         </form>
     </div>
 </div>
-
-
+@{
+    string version = System.Convert.ToBase64String(Model.RowVersion);
+}
 @if (Model.Type == "Reservation")
 {
     <div>
-        <a asp-action="Lease" asp-route-id="@Model?.Id">Change to Lease</a>
+        <a asp-action="Lease" asp-route-id="@Model?.Id" asp-route-version="@version">Change to Lease</a>
     </div>
 }
 @if(Model.Type == "Lease"){
