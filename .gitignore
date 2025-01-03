@@ -8,3 +8,5 @@ RAD*biblioteka/RAD*biblioteka.sln
 
 *.vscode/
 *.vs/
+*bin/
+*/obj/
