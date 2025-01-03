@@ -5,3 +5,6 @@ RAD*biblioteka/bin/
 RAD*biblioteka/Migrations
 *.local*
 RAD*biblioteka/RAD*biblioteka.sln
+
+*.vscode/
+*.vs/
