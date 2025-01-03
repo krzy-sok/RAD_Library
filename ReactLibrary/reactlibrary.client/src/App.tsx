@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './App.css';
+import { Header, Footer } from './shared/_Layout'
 
 interface Forecast {
     date: string;
@@ -38,12 +39,19 @@ function App() {
             </tbody>
         </table>;
 
+    const header = Header();
+    const footer = Footer();
     return (
         <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
+            {header}
+            <div>
+                <h1 id="tableLabel">Weather forecast</h1>
+                <p>This component demonstrates fetching data from the server.</p>
+                {contents}
+            </div>
+            {footer }
         </div>
+
     );
 
     async function populateWeatherData() {
