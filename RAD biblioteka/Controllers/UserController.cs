@@ -191,44 +191,34 @@ namespace RAD_biblioteka.Controllers
 
         public async Task<IActionResult> Unlease(int id, string version)
         {
-            //int id = Int32.Parse(dict["id"]);
-            //byte[] rowversion = Encoding.ASCII.GetBytes(version);
             byte[] rowversion = System.Convert.FromBase64String(version);
             if (id != null)
             {
-                //Console.WriteLine($"**************\n {RowVersion}\n *****************");
                 Leases lease = _context.Leases.Where(l => l.Id == id).Include(b => b.book).FirstOrDefault();
-                Console.WriteLine($"**************\n id: {id} version:  \n *****************");
                 lease.Active = false;
 
                 Book book = lease.book;
-                //Book book = await _context.Book.Where(b => b.Id == lease.book.Id).FirstOrDefaultAsync();
 
                 if (book != null)
                 {
                     //_context.Entry(lease).Property("RowVersion").OriginalValue = rowversion;
-                    Console.WriteLine($"**************\n past original value \n *****************");
                     book.Status = "Available";
                     try
                     {
                         _context.Leases.Update(lease);
-                        Console.WriteLine($"**************\n yipee \n *****************");
                         _context.Book.Update(book);
                         _context.SaveChanges();
                         TempData["result"] = $"Removed reservation of {book.Title}";
                     }
                     catch (DbUpdateConcurrencyException ex)
                     {
-                        Console.WriteLine($"**************\n bo womp \n *****************");
                         TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
                     }
                 }
-                Console.WriteLine($"**************\n no book??? \n *****************");
                 ModelState.AddModelError("", "Book not found");
             }
             else
             {
-                Console.WriteLine($"**************\n lease id is null \n *****************");
                 ModelState.AddModelError("", "Lease Id not provided");
             }
 

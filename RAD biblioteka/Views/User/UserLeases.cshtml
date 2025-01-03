@@ -46,18 +46,6 @@
                     @Html.DisplayFor(modelItem => item.user.userName)
                 </td>
                 <td>
-                    <!--
-                    <form asp-action="Unlease">
-                        <input type="hidden" asp-for="@item.Id"/>
-                        <input type="hidden" asp-for="@item.RowVersion" />
-                        <input type="hidden" asp-for="@item.book" />
-                        <input type="hidden" asp-for="@item.user" />
-                        <input type="hidden" asp-for="@item.Type" />
-                        <input type="hidden" asp-for="@item.leaseEnd" />
-                        <input type="hidden" asp-for="@item.leaseStart" />
-                        <input type="submit" value="Revert Reservation">
-                    </form>
-                    -->
                     @{
                         string version = System.Convert.ToBase64String(item.RowVersion);
                     }
