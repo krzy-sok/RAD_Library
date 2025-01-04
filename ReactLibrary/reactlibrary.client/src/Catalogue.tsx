@@ -13,7 +13,7 @@ import React, { useEffect, useState } from 'react';
 import { Header, Footer } from './shared/_Layout'
 
 // Define the Book interface based on the model
-interface Book {
+export interface Book {
     id: number;
     title: string;
     author: string;
@@ -61,6 +61,9 @@ const BookTable = () => {
                         <td>{book.publicationDate}</td>
                         <td>{book.price}</td>
                         <td>{book.status}</td>
+                        <td>
+                            <a href={`/detailsBook/${book.id}`}>Details</a> |
+                        </td>
                     </tr>
                 ))}
             </tbody>

@@ -6,13 +6,15 @@ import "./css/site.css"
 import App from './App.tsx'
 import { Catalogue } from "./Catalogue.tsx"
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { BookDetails } from "./BookCrud.tsx"
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route path='/' element={<App />} />
-                <Route path='/catalogue' element={<Catalogue/>} />
+                <Route path='/catalogue' element={<Catalogue />} />
+                <Route path='/detailsBook/:bookId' element={<BookDetails />} />
             </Routes>
         </BrowserRouter>,
   </StrictMode>,

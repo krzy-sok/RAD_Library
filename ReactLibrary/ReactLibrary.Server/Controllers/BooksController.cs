@@ -12,6 +12,7 @@ using System.Security.Claims;
 //using ReactLibrary.Server.Views;
 using System.Security.AccessControl;
 using System.Collections;
+using NuGet.Protocol;
 
 namespace ReactLibrary.Server.Controllers
 {
@@ -29,7 +30,7 @@ namespace ReactLibrary.Server.Controllers
         public void CheckExpiery()
         {
             var expired = _context.Leases.Where(l => l.Active == true && l.leaseEnd < DateTime.Today && l.Type == "Reservation").Include(b => b.book).ToList();
-            foreach(Leases lease in expired)
+            foreach (Leases lease in expired)
             {
                 Book book = lease.book;
                 book.Status = "Available";
@@ -40,69 +41,29 @@ namespace ReactLibrary.Server.Controllers
             _context.SaveChanges();
         }
         // GET: Books
-        [HttpGet(Name ="books/list")]
-        public  IEnumerable<Book> GetList()
+        [HttpGet(Name = "books/list")]
+        public IEnumerable<Book> GetList()
         {
             Console.Out.WriteLine("***************\n \n in controller \n \n ********************8");
-            ////CheckExpiery();
-            ////IQueryable<string> stausQuery = from b in _context.Book orderby b.Status select b.Status;
-            //var books = _context.Book.ToList();
-            ////IEnumerable<Book> bookList = books.ToArray();
-            //return books;
+            CheckExpiery();
             return _context.Book != null ?
-                         _context.Book.ToList() : [];
-                        //Problem("Entity set 'ReactLibraryContext.Book'  is null.");
+                         _context.Book.ToList() : []; ;
         }
-        //var books = from b in _context.Book select b;
-        //if (!User.IsInRole("Admin"))
-        //{
-        //    books = books.Where(b => b.Hidden == false);
-        //}
 
-        //if (!String.IsNullOrEmpty(searchString))
-        //{
-        //    var authors = from b in _context.Book select b;
-        //    books = books.Where(s => s.Title!.Contains(searchString));
-        //    authors = authors.Where(s => s.Author!.Contains(searchString));
-        //    books = books.Concat(authors).Distinct();
-        //}
-        //if (!string.IsNullOrEmpty(bookStatus))
-        //{
-        //    books = books.Where(x => x.Status == bookStatus);
-        //}
-        //var bookStatusVM = new BookStausViewModel
-        //{
-        //    Statuses = new SelectList(await stausQuery.Distinct().ToListAsync()),
-        //    Books = await books.ToListAsync()
-        //};
+        //GET: Books/Details/5
+        [HttpGet("{bookId:int}")]
+        public Book Details(int bookId)
+        {
+            Console.Out.WriteLine("***************\n \n in details \n \n ********************8");
+            var book = _context.Book
+                .FirstOrDefault(m => m.Id == bookId);
+            //if (book == null)
+            //{
+            //    return new Book[{ }];
+            //}
 
-        //return View(await books.ToArrayAsync());
-
-        //return bookStatusVM;
-
-        //return [new Book { Author="q", Id=1, Price=1, PublicationDate=}]
-        //return _context.Book != null ? 
-        //            View(await _context.Book.ToListAsync()) :
-        //            Problem("Entity set 'ReactLibraryContext.Book'  is null.");
-        //}
-
-        // GET: Books/Details/5
-        //public async Task<IActionResult> Details(int? id)
-        //{
-        //    if (id == null || _context.Book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var book = await _context.Book
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(book);
-        //}
+            return book;
+        }
 
         //// GET: Books/Create
         //[Authorize(Policy = "Librarian")]

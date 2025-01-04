@@ -1,6 +1,7 @@
 import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react'
 import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
@@ -47,7 +48,7 @@ const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_H
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [
-        plugin(),
+        react(),
     ],
     resolve: {
         alias: {
@@ -63,7 +64,22 @@ export default defineConfig({
             '^/books': {
                 target,
                 secure: false
+            },
+            '^/book/[0-9]': {
+                target,
+               secure: false,
+               //changeOrigin: true,
+               rewrite: path => {
+                   const bookId = path.split('/')[2];
+                   return `/books/${bookId}`;
+               }
             }
+            //'^/book/[0-9]': {
+            //    target, // Change this to your target API URL
+            //    //changeOrigin: true,                    // Optional: Adjusts the `Origin` header
+            //    //rewrite: (path) => path.replace(/^\/books/, '/book'), // Optional: If the backend expects a different path
+            //    secure: false,
+            //}
         },
         port: 53747,
         https: {
