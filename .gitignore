@@ -10,5 +10,5 @@ RAD*biblioteka/RAD*biblioteka.sln
 *.vs/
 *bin/
 *obj/
-*user
+*.user
 *suo
