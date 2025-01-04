@@ -15,6 +15,7 @@ export const BookDetailsBlock = (bookId: string) => {
     //    <p>no book</p>
     //    :
     return (
+        book === undefined ? <p>no book</p> :
         <div>
             <h1>Details</h1>
             <div>
@@ -22,35 +23,33 @@ export const BookDetailsBlock = (bookId: string) => {
                 <hr />
                 <dl className="row">
                     <dt className="col-sm-2">Title</dt>
-                    <dd className="col-sm-10">{book?.title}</dd>
+                    <dd className="col-sm-10">{book.title}</dd>
 
                     <dt className="col-sm-2">Author</dt>
-                    <dd className="col-sm-10">{book?.author}</dd>
+                    <dd className="col-sm-10">{book.author}</dd>
 
                     <dt className="col-sm-2">Publisher</dt>
-                    <dd className="col-sm-10">{book?.publisher}</dd>
+                    <dd className="col-sm-10">{book.publisher}</dd>
 
                     <dt className="col-sm-2">Publication Date</dt>
-                    <dd className="col-sm-10">{book?.publicationDate}</dd>
+                    <dd className="col-sm-10">{book.publicationDate}</dd>
 
                     <dt className="col-sm-2">Price</dt>
-                    <dd className="col-sm-10">{book?.price}</dd>
+                    <dd className="col-sm-10">{book.price}</dd>
 
                     <dt className="col-sm-2">Status</dt>
-                    <dd className="col-sm-10">{book?.status}</dd>
+                    <dd className="col-sm-10">{book.status}</dd>
                 </dl>
             </div>
 
             <div>
-                {/* Conditional rendering based on user role and authentication */}
+                 {/*Conditional rendering based on user role and authentication */}
                 {/*{user?.isAuthenticated && !user?.roles.includes('Admin') && book?.id && (*/}
-                {/*    <button onClick={() => onReserve(book.id)} className="btn btn-primary">*/}
-                {/*        Reserve*/}
-                {/*    </button>*/}
-                {/*)}*/}
-                {/*<button onClick={() => onEdit(book.id)} className="btn btn-secondary">*/}
-                {/*    Edit*/}
-                {/*</button>*/}
+                    <button onClick={() => onReserve(book.id)} className="btn btn-primary">
+                        Reserve
+                    </button>
+                    {/*)}*/}
+                    <a href={`/editBook/${bookId}`}>Edit</a>
                 {' | '}
                 <a href={'/catalogue'}>Back to list</a>
             </div>
@@ -66,7 +65,19 @@ export const BookDetailsBlock = (bookId: string) => {
             setBook(data);
         }
     }
+
+    function onReserve(bookId: number) {
+        console.log('reserving');
+        return
+    }
     
+}
+
+export const BookEdit = () => {
+    const { bookId } = useParams()
+    return (
+        <h1>Hello world { bookId}</h1>
+    )
 }
 
 export const BookDetails = () => {

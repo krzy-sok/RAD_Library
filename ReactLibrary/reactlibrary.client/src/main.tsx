@@ -6,7 +6,7 @@ import "./css/site.css"
 import App from './App.tsx'
 import { Catalogue } from "./Catalogue.tsx"
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { BookDetails } from "./BookCrud.tsx"
+import { BookDetails, BookEdit} from "./BookCrud.tsx"
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')!).render(
                 <Route path='/' element={<App />} />
                 <Route path='/catalogue' element={<Catalogue />} />
                 <Route path='/detailsBook/:bookId' element={<BookDetails />} />
+                <Route path='/editBook/:bookId' element={<BookEdit />} />
             </Routes>
         </BrowserRouter>,
   </StrictMode>,
