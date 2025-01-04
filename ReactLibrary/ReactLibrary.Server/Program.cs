@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using ReactLibrary.Server.Data;
 using ReactLibrary.Server.Models;
+using ReactLibrary.Server.Controllers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,5 +71,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapFallbackToFile("/index.html");
+
+//app.MapBookEndpoints();
 
 app.Run();

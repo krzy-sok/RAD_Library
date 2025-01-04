@@ -59,6 +59,10 @@ export default defineConfig({
             '^/weatherforecast': {
                 target,
                 secure: false
+            },
+            '^/books': {
+                target,
+                secure: false
             }
         },
         port: 53747,
