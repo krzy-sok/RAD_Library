@@ -1,14 +1,3 @@
-
-
-//export const Catalogue = () => {
-//    return (
-
-//        <div>
-//            <h1>Hello world</h1>
-//        </div>
-//    )
-//}
-
 import React, { useEffect, useState } from 'react';
 import { Header, Footer } from './shared/_Layout'
 
@@ -39,7 +28,8 @@ const BookTable = () => {
 
     const contents = books === undefined
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started</em></p>
-        : <table className="table">
+        :
+        <table className="table">
             <thead>
                 <tr>
                     <th>Title</th>
@@ -63,6 +53,8 @@ const BookTable = () => {
                         <td>{book.status}</td>
                         <td>
                             <a href={`/detailsBook/${book.id}`}>Details</a> |
+                            <a href={`/editBook/${book.id}`}>Edit</a> |
+                            <a href={`/deleteBook/${book.id}`}>Delete</a>
                         </td>
                     </tr>
                 ))}
@@ -79,6 +71,11 @@ const BookTable = () => {
             <div>
                 <h1>Books List</h1>
                 <p></p>
+                <a href="/createBook" >
+                    <button className="btn btn-primary">
+                        Create New book
+                    </button>
+                </a>
                 {contents}
             </div>
             {footer}
@@ -107,7 +104,7 @@ export const Catalogue = () => {
 //    <a href={`/details/${book.id}`}>Details</a> |
 //    {isAdmin && (
 //        <>
-//            <a href={`/edit/${book.id}`}>Edit</a> |
+            //<a href={`/edit/${book.id}`}>Edit</a> |
 //            <a href={`/delete/${book.id}`}>Delete</a>
 //        </>
 //    )}

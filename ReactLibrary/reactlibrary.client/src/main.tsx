@@ -6,7 +6,8 @@ import "./css/site.css"
 import App from './App.tsx'
 import { Catalogue } from "./Catalogue.tsx"
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { BookDetails, BookEdit} from "./BookCrud.tsx"
+import { BookDetails, BookDelete } from "./BookCrud.tsx"
+import { BookEdit, BookCreate } from "./BookEdit.tsx"
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -16,6 +17,8 @@ createRoot(document.getElementById('root')!).render(
                 <Route path='/catalogue' element={<Catalogue />} />
                 <Route path='/detailsBook/:bookId' element={<BookDetails />} />
                 <Route path='/editBook/:bookId' element={<BookEdit />} />
+                <Route path='/deleteBook/:bookId' element={<BookDelete />} />
+                <Route path='/createBook' element={<BookCreate />} />
             </Routes>
         </BrowserRouter>,
   </StrictMode>,

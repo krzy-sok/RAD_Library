@@ -75,89 +75,86 @@ namespace ReactLibrary.Server.Controllers
         //// POST: Books/Create
         //// To protect from overposting attacks, enable the specific properties you want to bind to.
         //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
+        [HttpPost]
         //[ValidateAntiForgeryToken]
         //[Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> Create(Book book)
-        //{
-        //    book.Hidden = false;
-        //    //book.PublicationDate = DateTime.Parse(book.PublicationDate);
-        //    Console.WriteLine(book.PublicationDate);
-        //    book.Status = "Available";
-        //    //if (ModelState.IsValid)
-        //    //{
-        //        _context.Add(book);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    //}
-        //    //else
-        //    //{
-        //    //    Console.WriteLine("****************\n invalid\n");
-        //    //}
-        //    return View(book);
-        //}
+        public async Task<IActionResult> Create(Book book)
+        {
+            book.Hidden = false;
+            //book.PublicationDate = DateTime.Parse(book.PublicationDate);
+            //Console.WriteLine(book.PublicationDate);
+            book.Status = "Available";
+            //if (ModelState.IsValid)
+            //{
+            _context.Add(book);
+            await _context.SaveChangesAsync();
+            //return RedirectToAction(nameof(Index));
+            //}
+            //else
+            //{
+            //    Console.WriteLine("****************\n invalid\n");
+            //}
+            return CreatedAtAction("GetBook", new { id = book.Id}, book);
+        }
 
-        //// GET: Books/Edit/
-        // [Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> Edit(int? id)
+        // GET: Books/Edit/
+        //[Authorize(Policy = "Librarian")]
+        //[HttpGet("edit/")]
+        //public Book Edit(int bookId)
         //{
-        //    if (id == null || _context.Book == null)
+        //    if (bookId == null || _context.Book == null)
         //    {
-        //        return NotFound();
+        //        return null;
         //    }
 
-        //    var book = await _context.Book.FindAsync(id);
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    return View(book);
+        //    var book =  _context.Book.Find(bookId);
+        //    //if (book == null)
+        //    //{
+        //    //    return NotFound();
+        //    //}
+        //    return book;
         //}
 
-        //// POST: Books/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
+        // POST: Books/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPut("{bookId:int}")]
         //[ValidateAntiForgeryToken]
         //[Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> Edit(int id, Book book)
-        //{
-        //    if (id != book.Id)
-        //    {
-        //        return NotFound();
-        //    }
+        public async Task<IActionResult> Edit(int bookId, Book book)
+        {
 
-        //    //if (ModelState.IsValid)
-        //    //{
-        //    try
-        //    {
-        //        //Book book2 = _context.Book.Find(id);
+            //if (ModelState.IsValid)
+            //{
+            try
+            {
+                //Book book2 = _context.Book.Find(id);
 
-        //        //book.Status = book.Status;
-        //        _context.Update(book);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!BookExists(book.Id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-        //    return RedirectToAction(nameof(Index));
-        //    //}
-        //    return View(book);
-        //}
+                //book.Status = book.Status;
+                _context.Update(book);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!BookExists(book.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Conflict();
+                }
+            }
+            //}
+            return NoContent();
+        }
 
-        //// GET: Books/Delete/5
+        // GET: Books/Delete/5
         //[Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> Delete(int? id)
+        //[HttpDelete("{bookId: int}")]
+        //public async Task<IActionResult> Delete(int? bookId)
         //{
-        //    if (id == null || _context.Book == null)
+        //    if (bookId == null || _context.Book == null)
         //    {
         //        return NotFound();
         //    }
@@ -173,44 +170,49 @@ namespace ReactLibrary.Server.Controllers
         //}
 
         //// POST: Books/Delete/5
-        //[HttpPost, ActionName("Delete")]
+        [HttpPost("{boookId:int}")]
         //[ValidateAntiForgeryToken]
         //[Authorize(Policy = "Librarian")]
-        //public async Task<IActionResult> DeleteConfirmed(int id)
-        //{
-        //    if (_context.Book == null)
-        //    {
-        //        return Problem("Entity set 'ReactLibraryContext.Book'  is null.");
-        //    }
-        //    var book = await _context.Book.FindAsync(id);
-        //    if (book.Status != "Available")
-        //    {
-        //        TempData["error"] = $"Book {book.Title} cannot be deleted now";
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    if (book != null)
-        //    {
-        //        if (_context.Leases.Where(l => l.book == book).ToList().Count() != 0)
-        //        {
-        //            book.Hidden = true;
-        //            _context.Book.Update(book);
-        //            TempData["result"] = $"Book {book.Title} has been hidden";
-        //        }
-        //        else
-        //        {
-        //            _context.Book.Remove(book);
-        //            TempData["result"] = $"Book {book.Title} has been deleted";
-        //        }
-        //    }
+        public async Task<IActionResult> Delete(int boookId)
+        {
+            if (_context.Book == null)
+            {
+                return Problem("Entity set 'ReactLibraryContext.Book'  is null.");
+            }
+            var book = await _context.Book.FindAsync(boookId);
+            if (book.Status != "Available")
+            {
+                //TempData["error"] = $"Book {book.Title} cannot be deleted now";
+                //return RedirectToAction(nameof(Index));
+                return Forbid();
+            }
+            if (book != null)
+            {
+                if (_context.Leases.Where(l => l.book == book).ToList().Count() != 0)
+                {
+                    book.Hidden = true;
+                    _context.Book.Update(book);
+                    //TempData["result"] = $"Book {book.Title} has been hidden";
+                    await _context.SaveChangesAsync();
+                    return Accepted();
+                }
+                else
+                {
+                    _context.Book.Remove(book);
+                    //TempData["result"] = $"Book {book.Title} has been deleted";
+                    await _context.SaveChangesAsync();
+                    return Ok();
+                }
+            }
 
-        //    await _context.SaveChangesAsync();
-        //    return RedirectToAction(nameof(Index));
-        //}
+            return BadRequest();
+            //return RedirectToAction(nameof(Index));
+        }
 
-        //private bool BookExists(int id)
-        //{
-        //  return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
-        //}
+        private bool BookExists(int id)
+        {
+            return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
 
         //public async Task<IActionResult> Reserve(int? id)
         //{
