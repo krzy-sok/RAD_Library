@@ -14,7 +14,9 @@ using System.Xml.Serialization;
 
 namespace ReactLibrary.Server.Controllers
 {
-    public class UserController : Controller
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
     {
         private readonly ReactLibraryContext _context;
 
@@ -46,23 +48,26 @@ namespace ReactLibrary.Server.Controllers
             return Encoding.UTF8.GetString(hashValue);
         }
 
-        [Authorize]
-        public IActionResult Index()
-        {
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-            return View();
+        //[Authorize]
+        //public IActionResult Index()
+        //{
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        return RedirectToAction("Index", "Home");
+        //    }
+        //    return View();
+        //}
+        [HttpGet]
+        [Route("test")]
+        public IActionResult test() {
+            return Ok();
         }
 
-        public IActionResult Registration()
-        {
-            return View();
-        }
         [HttpPost]
+        [Route("register")]
         public IActionResult Registration(RegistrationViewModel model)
         {
+            Console.WriteLine("\n*********\n\n IN REGIOSTER \n\n **********\n");
             if (ModelState.IsValid)
             {
                 User user = new User();
@@ -80,23 +85,18 @@ namespace ReactLibrary.Server.Controllers
                     _context.SaveChanges();
 
                     ModelState.Clear();
-                    ViewBag.Message = $"{user.userName} registerd succesfully";
+                    return Ok();
                 }
                 catch (DbUpdateException ex)
                 {
-                    ModelState.AddModelError("", "User with that email already exists!");
-                    return View(model);
+                    return StatusCode(406);
                 }
             }
-            return View(model);
+            return BadRequest();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        [HttpPost]
+        [HttpPut]
+        [Route("login")]
         public IActionResult Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -127,26 +127,21 @@ namespace ReactLibrary.Server.Controllers
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                    return RedirectToAction("Index");
+                    return Ok();
                 }
                 else
                 {
                     ModelState.AddModelError("", "Incorrect login data");
+                    return StatusCode(406);
                 }
             }
-            return View(model);
+            return BadRequest();
         }
 
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
-        }
-
-        [Authorize]
-        public async Task<IActionResult> Delete()
-        {
-            return View();
         }
 
         //POST: Users/Delete/5
@@ -162,18 +157,19 @@ namespace ReactLibrary.Server.Controllers
 
             if (UserLeases.Count != 0)
             {
-                ModelState.AddModelError("", "Cannot delete user wieth reservations/Leases");
-                return View(model);
+                //ModelState.AddModelError("", "Cannot delete user wieth reservations/Leases");
+                return Forbid();
             }
             if (user != null)
             {
                 HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                 _context.User.Remove(user);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index", "Home");
+                return Ok();
+                //return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("", "Incorect user credentials");
-            return View(model);
+            //ModelState.AddModelError("", "Incorect user credentials");
+            return Unauthorized();
         }
 
         // GET: Leases
@@ -185,7 +181,7 @@ namespace ReactLibrary.Server.Controllers
             var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToListAsync();
             Console.WriteLine($"**************\n in user leases \n *****************");
             return _context.Leases != null ?
-                        View(UserLeases) :
+                        Ok() :
                         Problem("Entity set 'ReactLibraryContext.Leases'  is null.");
         }
 
@@ -208,21 +204,23 @@ namespace ReactLibrary.Server.Controllers
                         _context.Leases.Update(lease);
                         _context.Book.Update(book);
                         _context.SaveChanges();
-                        TempData["result"] = $"Removed reservation of {book.Title}";
+                        //TempData["result"] = $"Removed reservation of {book.Title}";
+                        return Ok();
                     }
                     catch (DbUpdateConcurrencyException ex)
                     {
-                        TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                        //TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
+                        return StatusCode(409);
                     }
                 }
-                ModelState.AddModelError("", "Book not found");
+                //ModelState.AddModelError("", "Book not found");
+                return NotFound();
             }
             else
             {
-                ModelState.AddModelError("", "Lease Id not provided");
+                //ModelState.AddModelError("", "Lease Id not provided");
+                return BadRequest();
             }
-
-            return RedirectToAction("UserLeases");
         }
 
     }

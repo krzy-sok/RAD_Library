@@ -2,7 +2,6 @@ import { fileURLToPath, URL } from 'node:url';
 
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react'
-import plugin from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import child_process from 'child_process';
@@ -65,21 +64,19 @@ export default defineConfig({
                 target,
                 secure: false
             },
-            '^/book/[0-9]': {
+            '^/book/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
                 target,
                secure: false,
                //changeOrigin: true,
                rewrite: path => {
                    const bookId = path.split('/')[2];
                    return `/books/${bookId}`;
-               }
+                }
+            },
+            '^/user/register': {
+                target,
+                secure: false,
             }
-            //'^/book/[0-9]': {
-            //    target, // Change this to your target API URL
-            //    //changeOrigin: true,                    // Optional: Adjusts the `Origin` header
-            //    //rewrite: (path) => path.replace(/^\/books/, '/book'), // Optional: If the backend expects a different path
-            //    secure: false,
-            //}
         },
         port: 53747,
         https: {

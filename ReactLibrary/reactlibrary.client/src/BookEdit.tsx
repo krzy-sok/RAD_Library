@@ -3,6 +3,7 @@ import { Header, Footer } from './shared/_Layout'
 import { useParams } from 'react-router-dom';
 import { Book } from "./Catalogue"
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import { InputField} from "./shared/InputField"
 
 
 //interface ValidationErrors {
@@ -119,24 +120,7 @@ export const EditBookForm = (bookId:string, create=false) => {
 
 };
 
-export const InputField = ({ label, id, defaultVal, type }) => {
-    const { register } = useFormContext();
 
-    return (
-        <div className="form-group" >
-            <label htmlFor={id} > {label} </label>
-            < input type={type} id={id} name={id} placeholder={defaultVal} className="form-control"
-                {...register(id, {
-                    required: {
-                        value: true,
-                        message: `${label} is required`,
-                    }
-                })
-                }
-            />
-        </div>
-    );
-};
 
 
 export const BookEdit = () => {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 //interface LayoutProps {
@@ -10,8 +10,15 @@ import { Link } from 'react-router-dom';
 //}
 //{ children, title = "Library", result, error, isAdmin }
 
+interface UserInfo {
+    userName: string;
+    email: string;
+}
+
 export const Header =  () => {
     const title = "ReactLibarary"
+
+    //const loginPartial = LoginPartial();
     return (
         <header>
             <nav className="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -51,7 +58,8 @@ export const Header =  () => {
                             {/*)}*/}
                         </ul>
                          {/*Replace with your Login component logic */}
-                         {/*<LoginPartial /> */}
+                        <LoginPartial />
+
                     </div>
                 </div>
             </nav>
@@ -69,22 +77,42 @@ export const Footer= () => {
     );
 }
 
-//export const Feedback = () => {
-//    return (
-//        <div className="container">
-//            {result && 
-//                <div className="form-group" style={{ color: 'green' }}>
-//                    {result}
-//                </div>
-//            )}
-//            {error && 
-//                <div className="form-group" style={{ color: 'red' }}>
-//                    {error}
-//                </div>
-//            )}
-//            <main role="main" className="pb-3">
-//                {children}
-//            </main>
-//        </div>
-//    )
-//}
+export const LoginPartial = () => {
+    const [userInfo, setUserInfo] = useState<UserInfo>();
+
+    useEffect(() => {
+        checkIfLoggedIn();
+    }, []);
+
+    return (
+        userInfo === undefined
+            ? <ul className="nav navbar-nav navbar-right">
+                <li>
+                    <Link className="nav-link text-dark" to="/registration">Register</Link>
+                </li>
+                <li>
+                    <Link className="nav-link text-dark" to="/login">Log in</Link>
+                </li>
+            </ul>
+            : <ul className="nav navbar-nav navbar-right">
+                <li>
+                    <h4>Hello {userInfo.userName} </h4>
+                </li>
+                <li>
+                    <button className="btn btn-link navbar-btn navbar-link" onClick={Logout}>Log out</button>
+                </li>
+            </ul> 
+    );
+
+    async function checkIfLoggedIn() {
+        const response = await fetch("/user/info")
+        if (response.ok) {
+            const data = await response.json();
+            setUserInfo(data);
+        }
+    }
+
+    async function Logout() {
+
+    }
+}
