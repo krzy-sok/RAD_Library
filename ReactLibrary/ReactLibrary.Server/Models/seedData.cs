@@ -50,21 +50,21 @@ namespace ReactLibrary.Server.Models
                         }
                     );
                 }
-                //if (!context.User.Any())
-                //{
-                //    UserController controller = new UserController(context);
-                //    context.User.Add(
-                //        new User
-                //        {
-                //            userName = "Librarian",
-                //            password = controller.HashPasswd("librarian"),
-                //            firstName = "John",
-                //            lastName = "Doe",
-                //            email = "librarian@offical",
-                //            admin = true
-                //        }
-                //    ); 
-                //}
+                if (!context.User.Any())
+                {
+                    UserController controller = new UserController(context);
+                    context.User.Add(
+                        new User
+                        {
+                            userName = "Librarian",
+                            password = controller.HashPasswd("librarian"),
+                            firstName = "John",
+                            lastName = "Doe",
+                            email = "librarian@offical",
+                            admin = true
+                        }
+                    );
+                }
                 context.SaveChanges();
 
                 return;

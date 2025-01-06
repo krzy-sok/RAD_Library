@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, createContext } from 'react'
 import { createRoot } from 'react-dom/client'
 //import './index.css'
 import "./css/bootstrap.min.css"
@@ -11,19 +11,20 @@ import { BookEdit, BookCreate } from "./BookEdit.tsx"
 import { LoginForm } from "./LoginForm.tsx"
 import { RegisterForm } from "./RegisterForm.tsx"
 
+
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<App />} />
-                <Route path='/catalogue' element={<Catalogue />} />
-                <Route path='/detailsBook/:bookId' element={<BookDetails />} />
-                <Route path='/editBook/:bookId' element={<BookEdit />} />
-                <Route path='/deleteBook/:bookId' element={<BookDelete />} />
-                <Route path='/createBook' element={<BookCreate />} />
-                <Route path='/login' element={<LoginForm />} />
-                <Route path='/registration' element={<RegisterForm />} />
-            </Routes>
-        </BrowserRouter>,
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<App />} />
+                    <Route path='/catalogue' element={<Catalogue />} />
+                    <Route path='/detailsBook/:bookId' element={<BookDetails />} />
+                    <Route path='/editBook/:bookId' element={<BookEdit />} />
+                    <Route path='/deleteBook/:bookId' element={<BookDelete />} />
+                    <Route path='/createBook' element={<BookCreate />} />
+                    <Route path='/login' element={<LoginForm />} />
+                    <Route path='/registration' element={<RegisterForm />} />
+                </Routes>
+            </BrowserRouter>,
   </StrictMode>,
 )

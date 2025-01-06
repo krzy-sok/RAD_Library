@@ -66,6 +66,7 @@ app.UseHttpsRedirection();
 //    RequestPath = "/"
 //});
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

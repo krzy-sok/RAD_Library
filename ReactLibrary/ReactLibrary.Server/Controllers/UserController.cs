@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Data;
 using System.Xml.Serialization;
+using Microsoft.Extensions.Configuration.UserSecrets;
 
 namespace ReactLibrary.Server.Controllers
 {
@@ -99,6 +100,8 @@ namespace ReactLibrary.Server.Controllers
         [Route("login")]
         public IActionResult Login(LoginViewModel model)
         {
+            Console.WriteLine("\n********\n\n in login \n\n ******\n");
+            Console.WriteLine(model);
             if (ModelState.IsValid)
             {
                 string hash = HashPasswd(model.password);
@@ -135,13 +138,25 @@ namespace ReactLibrary.Server.Controllers
                     return StatusCode(406);
                 }
             }
-            return BadRequest();
+            return StatusCode(401);
         }
 
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        [Route("info")]
+        [Authorize]
+        public IResult UserInfo()
+        {
+            Console.WriteLine("\n******\n\n in user info \n\n *******\n");
+            var username = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
+            var role = User.Claims.Where(c => c.Type == ClaimTypes.Role).FirstOrDefault().Value;
+            Console.WriteLine($"\n******\n\n {username} \n\n *******\n");
+            return username != null ? Results.Json(new { username = username, role = role }) : Results.Json(new { username = "none" });
         }
 
         //POST: Users/Delete/5

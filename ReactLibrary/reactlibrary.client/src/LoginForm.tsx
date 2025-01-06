@@ -10,6 +10,8 @@ export const LoginForm = () => {
     const onSubmit = methods.handleSubmit(data => {
         console.log(data)
         //make put request to /user
+
+        SendLoginRequest(data);
     })
     return (
         <div>
@@ -36,4 +38,24 @@ export const LoginForm = () => {
             <Footer />
         </div>
     );
+
+    async function SendLoginRequest(data) {
+        console.log("\n********\n\n in send request \n\n ******\n");
+        console.log(data)
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        };
+        const response = await fetch('/user/login', requestOptions);
+        if (response.ok) {
+            setFeedback(<div style={{ color: "green" }} > Login succesful login</div>);
+        }
+        else if (response.status == 406) {
+            setFeedback(<div style={{ color: "red" }} >Incorrect login data</div>)
+        }
+        else {
+            setFeedback(<div style={{ color: "red" }} >Bad request</div>)
+        }
+    }
 }

@@ -10,10 +10,6 @@ import { Link } from 'react-router-dom';
 //}
 //{ children, title = "Library", result, error, isAdmin }
 
-interface UserInfo {
-    userName: string;
-    email: string;
-}
 
 export const Header =  () => {
     const title = "ReactLibarary"
@@ -78,14 +74,14 @@ export const Footer= () => {
 }
 
 export const LoginPartial = () => {
-    const [userInfo, setUserInfo] = useState<UserInfo>();
+    const [userName, setUserName] = useState<string>();
 
     useEffect(() => {
         checkIfLoggedIn();
     }, []);
 
     return (
-        userInfo === undefined
+        userName === undefined
             ? <ul className="nav navbar-nav navbar-right">
                 <li>
                     <Link className="nav-link text-dark" to="/registration">Register</Link>
@@ -96,7 +92,7 @@ export const LoginPartial = () => {
             </ul>
             : <ul className="nav navbar-nav navbar-right">
                 <li>
-                    <h4>Hello {userInfo.userName} </h4>
+                    <h6>Hello {userName} </h6>
                 </li>
                 <li>
                     <button className="btn btn-link navbar-btn navbar-link" onClick={Logout}>Log out</button>
@@ -105,10 +101,11 @@ export const LoginPartial = () => {
     );
 
     async function checkIfLoggedIn() {
-        const response = await fetch("/user/info")
+        const response = await fetch('/user/info')
         if (response.ok) {
             const data = await response.json();
-            setUserInfo(data);
+            console.log(data)
+            setUserName(data.username);
         }
     }
 

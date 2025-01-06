@@ -76,6 +76,15 @@ export default defineConfig({
             '^/user/register': {
                 target,
                 secure: false,
+            },
+            '^/user/login': {
+                target,
+                secure: false,
+            },
+            '^/user/info': {
+                target,
+                secure: false,
+                //rewrite: path => {return '/user/test'}
             }
         },
         port: 53747,
