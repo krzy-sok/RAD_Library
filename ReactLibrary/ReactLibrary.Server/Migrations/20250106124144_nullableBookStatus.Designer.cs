@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ReactLibrary.Server.Data;
 
@@ -11,9 +12,11 @@ using ReactLibrary.Server.Data;
 namespace ReactLibrary.Server.Migrations
 {
     [DbContext(typeof(ReactLibraryContext))]
-    partial class ReactLibraryContextModelSnapshot : ModelSnapshot
+    [Migration("20250106124144_nullableBookStatus")]
+    partial class nullableBookStatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace ReactLibrary.Server.Models
 {
-    public class Book
+    public class BookAddModel
     {
-
-        public int Id { get; set; }
         public string Title { get; set; }
 
         public string Author { get; set; }
@@ -20,11 +18,5 @@ namespace ReactLibrary.Server.Models
 
         [Column(TypeName = "decimal(18, 2)")]
         public decimal? Price { get; set; }
-
-        public string? Status { get; set; }
-
-        public bool Hidden { get; set; }
-
-
     }
 }

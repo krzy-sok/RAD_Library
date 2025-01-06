@@ -16,7 +16,6 @@ export const BookDetailsBlock = (bookId: string) => {
     //    :
     return (
         book === undefined ? <p>no book</p> :
-        <div>
             <div>
                 <h4>Book</h4>
                 <hr />
@@ -40,7 +39,6 @@ export const BookDetailsBlock = (bookId: string) => {
                     <dd className="col-sm-10">{book.status}</dd>
                 </dl>
             </div>
-        </div>
     );
 
     async function getBook(bookId: number) {
@@ -52,13 +50,6 @@ export const BookDetailsBlock = (bookId: string) => {
             setBook(data);
         }
     }
-}
-
-export const BookEdit = () => {
-    const { bookId } = useParams()
-    return (
-        <h1>Hello world { bookId}</h1>
-    )
 }
 
 export const BookDetails = () => {
@@ -96,6 +87,7 @@ export const BookDetails = () => {
 
 export const BookDelete = () => {
     const { bookId } = useParams()
+    const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
     //const detailsBlock = 
     const header = Header();
     const footer = Footer();
@@ -104,6 +96,7 @@ export const BookDelete = () => {
             {header}
             <div>
                 <h1>Delete</h1>
+                {feedback}
                 {BookDetailsBlock(bookId!)}
                 <div>
                     {/*Conditional rendering based on user role and authentication */}
@@ -120,9 +113,26 @@ export const BookDelete = () => {
         </div>
     );
 
-    function DeleteConfirmed(bookId: number) {
+    async function DeleteConfirmed(bookId: number) {
         console.log(`deleting book of id {bookID}`);
         //make api call to book/id as http delete
+        const requestOptions = {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+        };
+        const response = await fetch('/book/' + bookId, requestOptions);
+        if (response.status == 403) {
+            setFeedback(<div style={{ color: "red" }} >Cannot delete leased book</div>);
+        }
+        else if (response.status == 202) {
+            setFeedback(<div style={{ color: "green" }} >Book hidden</div>);
+        }
+        else if (response.ok) {
+            setFeedback(<div style={{ color: "green" }} >Book deleted</div>);
+        }
+        else {
+            setFeedback(<div style={{ color: "red" }} >Book does not exist or different error occured</div>);
+        }
     }
 }
 

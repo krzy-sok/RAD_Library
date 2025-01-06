@@ -12,6 +12,7 @@ import { useForm, FormProvider, useFormContext } from "react-hook-form";
 
 export const EditBookForm = (bookId:string, create=false) => {
     const [book, setBook] = useState<Book>()
+    const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
     useEffect(() => {
         if (!create) {
             getBook(parseInt(bookId!))
@@ -20,13 +21,15 @@ export const EditBookForm = (bookId:string, create=false) => {
 
     }, [bookId]);
     const methods = useForm();
-    const onSubmit = methods.handleSubmit(data => {
+    const onSubmit =  methods.handleSubmit(data => {
         console.log(data)
-        if (create) {
-            //call to api /book/bookID with post method
+        if (!create) {
+            //call to api /book/bookID with put method
+            makePUTrequest(data);
         }
         else {
-            //call to api with put method
+            //call to api with post method
+            makePOSTrequest(data)
         }
     })
     
@@ -35,18 +38,18 @@ export const EditBookForm = (bookId:string, create=false) => {
     <div>
         <h4> Book {book.title}</h4>
         < hr />
-
+        { feedback}
         <div className= "row" >
             <div className="col-md-4" >
                 <FormProvider {...methods}>
-                    <form onSubmit={e => e.preventDefault} noValidate>
+                    <form onSubmit={e => e.preventDefault()} noValidate>
                         <input type="hidden" id="id" name="id" value={book.id} />
                         <input type="hidden" id="status" name="status" value={book.status}/>
-                        <InputField label="Title" type="text" id="title" defaultVal={book.title} />
-                        <InputField label="Author" type="text" id="author" defaultVal={book.author} />
-                        <InputField label="Publisher" type="text" id="publisher" defaultVal={book.publisher} />
-                        <InputField label="Publication Date" type="date" id="publicationDate" defaultVal={book.publicationDate} />
-                        <InputField label="Price" type="number" id="pice" defaultVal={book.price} />
+                        <InputField label="Title" type="text" id="Title" defaultVal={book.title} />
+                        <InputField label="Author" type="text" id="Author" defaultVal={book.author} />
+                        <InputField label="Publisher" type="text" id="Publisher" defaultVal={book.publisher} />
+                        <InputField label="Publication Date" type="date" id="PublicationDate" defaultVal={book.publicationDate} />
+                        <InputField label="Price" type="number" id="Pice" defaultVal={book.price} />
 
                         <div className="form-group" >
                             <button onClick={onSubmit} className="btn btn-primary">
@@ -68,8 +71,49 @@ export const EditBookForm = (bookId:string, create=false) => {
         //console.log(`\n************\n ${response.body} \n ***************8`)
         if (response.ok) {
             const data = await response.json();
-            console.log(data)
+            //console.log(data)
             setBook(data);
+        }
+    }
+
+    async function makePUTrequest(data) {
+        console.log(data)
+        //call to api /book/bookID with PUT method
+        console.log("\n*******\n\n PUT request \n\n *********\n")
+        const requestOptions = {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        };
+        const response = await fetch('/book/' + bookId, requestOptions);
+        if (response.status == 404) {
+            setFeedback(<div style={{color: "red"}} >This book no longer exists</div>);
+        }
+        else if (response.status == 409) {
+            getBook(parseInt(bookId))
+            setFeedback(<div style={{ color: "red" }} >There was a concurrency event, please try again</div>);
+        }
+        else if (response.ok) {
+            getBook(parseInt(bookId))
+            setFeedback(<div style={{ color: "green" }} >Book edited succesfully</div>);
+        }
+    }
+
+    async function makePOSTrequest(data) {
+        console.log(data)
+        console.log("\n*******\n\n POST request \n\n *********\n")
+        //call to api /book/bookID with post method
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        };
+        const response = await fetch('/books', requestOptions);
+        if (response.status == 201) {
+            setFeedback(<div style={{ color: "green" }} >Book added succesfully</div>);
+        }
+        else {
+            setFeedback(<div style={{ color: "red" }} >Unexpected error while adding book</div>);
         }
     }
 
@@ -88,22 +132,24 @@ export const InputField = ({ label, id, defaultVal, type }) => {
                         message: `${label} is required`,
                     }
                 })
-                } />
+                }
+            />
         </div>
     );
 };
+
 
 export const BookEdit = () => {
     const { bookId } = useParams()
     const header = Header();
     const footer = Footer();
     return (
-        <body>
+        <div>
             {header}
             <h1>Edit </h1>
             {EditBookForm(bookId!)}
             {footer}
-        </body>
+        </div>
     )
 
 }
@@ -113,11 +159,11 @@ export const BookCreate = () => {
     const header = Header();
     const footer = Footer();
     return (
-        <body>
+        <div>
             {header}
             <h1>Create </h1>
             {EditBookForm("0", true)}
             {footer}
-        </body>
+        </div>
     )
 }
