@@ -98,7 +98,7 @@ namespace ReactLibrary.Server.Controllers
 
         [HttpPut]
         [Route("login")]
-        public IActionResult Login(LoginViewModel model)
+        public IResult Login(LoginViewModel model)
         {
             Console.WriteLine("\n********\n\n in login \n\n ******\n");
             Console.WriteLine(model);
@@ -129,16 +129,15 @@ namespace ReactLibrary.Server.Controllers
                     }
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-
-                    return Ok();
+                    return Results.Json(new { username = user.userName, role = user.admin });
                 }
                 else
                 {
                     ModelState.AddModelError("", "Incorrect login data");
-                    return StatusCode(406);
+                    return Results.StatusCode(406);
                 }
             }
-            return StatusCode(401);
+            return Results.StatusCode(401);
         }
 
         public IActionResult LogOut()

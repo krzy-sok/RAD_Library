@@ -10,10 +10,12 @@ import { BookDetails, BookDelete } from "./BookCrud.tsx"
 import { BookEdit, BookCreate } from "./BookEdit.tsx"
 import { LoginForm } from "./LoginComponent.tsx"
 import { RegisterForm } from "./RegisterComponent.tsx"
+import { AuthProvider } from "./LoginComponent.tsx"
 
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
+        <AuthProvider>
             <BrowserRouter>
                 <Routes>
                     <Route path='/' element={<App />} />
@@ -25,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path='/login' element={<LoginForm />} />
                     <Route path='/registration' element={<RegisterForm />} />
                 </Routes>
-            </BrowserRouter>,
+            </BrowserRouter>
+        </AuthProvider>
   </StrictMode>,
 )
