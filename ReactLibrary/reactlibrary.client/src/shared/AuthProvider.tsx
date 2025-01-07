@@ -50,9 +50,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const response = await fetch('/user/logout');
         if (response.ok) {
             console.log("logout")
-            setIsadmin(null)
-            setUsername(null)
-            return 200;
+            setIsadmin(undefined);
+            setUsername(undefined)
         }
     }
 
