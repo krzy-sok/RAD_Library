@@ -73,6 +73,15 @@ export default defineConfig({
                    return `/books/${bookId}`;
                 }
             },
+            '^/books/reserve/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
+                target,
+                secure: false,
+                //changeOrigin: true,
+                rewrite: path => {
+                    const bookId = path.split('/')[3];
+                    return `/books/reserve/${bookId}`;
+                }
+            },
             '^/user/register': {
                 target,
                 secure: false,
@@ -94,6 +103,7 @@ export default defineConfig({
                 target,
                 secure: false,
             },
+
         },
         port: 53747,
         https: {

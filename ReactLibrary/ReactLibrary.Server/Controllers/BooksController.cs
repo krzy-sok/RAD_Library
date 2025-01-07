@@ -157,45 +157,52 @@ namespace ReactLibrary.Server.Controllers
             return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        //public async Task<IActionResult> Reserve(int? id)
-        //{
-        //    var email = User.Claims.Where(c=>c.Type == ClaimTypes.Email).FirstOrDefault().Value;
-        //    //Console.WriteLine("******************\n");
-        //    //Console.WriteLine(email);
-        //    //Console.WriteLine("\n******************\n");
 
-        //    Console.WriteLine("******************\n");
-        //    Console.WriteLine(id);
-        //    Console.WriteLine("\n******************\n");
+        //[Authorize]
+        [HttpGet("reserve/{bookId:int}")]
+        public async Task<IActionResult> Reserve(int bookId)
+        {
+            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
+            Console.WriteLine("******************\n");
+            Console.WriteLine(email);
+            Console.WriteLine("\n******************\n");
 
-        //    if(id != null && email != null)
-        //    {
-        //        var book = await _context.Book.FindAsync(id);
-        //        if (book.Status != "Available")
-        //        { 
-        //            TempData["error"] = $"Book {book.Title} is alredy reserved";
-        //            return RedirectToAction("Details", new { id = id });
-        //        }
-        //        book.Status = "Reserved";
-        //        _context.Update(book);
+            Console.WriteLine("******************\n");
+            Console.WriteLine(bookId);
+            Console.WriteLine("\n******************\n");
 
-        //        var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
+            if (bookId != null && email != null)
+            {
+                var book = await _context.Book.FindAsync(bookId);
+                if (book.Status != "Available")
+                {
+                    //TempData["error"] = $"Book {book.Title} is alredy reserved";
+                    //return RedirectToAction("Details", new { id = id });
+                    return Conflict();
 
-        //        var lease = new Leases();
-        //        lease.leaseStart = DateTime.Today;
-        //        lease.leaseEnd = DateTime.Today.AddDays(1);
-        //        lease.book = book;
-        //        lease.user = user;
-        //        lease.Type = "Reservation";
-        //        lease.Active = true;
-        //        _context.Add(lease);
+                }
+                book.Status = "Reserved";
+                _context.Update(book);
 
-        //        _context.SaveChanges();
+                var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
 
-        //        TempData["result"] = $"Book {book.Title} has been reserved";
-        //    }
+                var lease = new Leases();
+                lease.leaseStart = DateTime.Today;
+                lease.leaseEnd = DateTime.Today.AddDays(1);
+                lease.book = book;
+                lease.user = user;
+                lease.Type = "Reservation";
+                lease.Active = true;
+                _context.Add(lease);
 
-        //    return RedirectToAction("Details", new { id = id });
-        //}
+                _context.SaveChanges();
+
+                //TempData["result"] = $"Book {book.Title} has been reserved";
+                return Ok();
+            }
+
+            //return RedirectToAction("Details", new { id = id });
+            return BadRequest();
+        }
     }
 }

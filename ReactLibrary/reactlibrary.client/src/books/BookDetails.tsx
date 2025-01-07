@@ -5,14 +5,14 @@ import { Book } from "./Catalogue"
 import { useAuth } from '../shared/AuthProvider';
 import { Link, Navigate} from 'react-router-dom';
 
-export const BookDetailsBlock = (bookId: string) => {
+const BookDetailsBlock = (bookId: string) => {
     const [book, setBook] = useState<Book>()
 
     useEffect(() => {
         getBook(parseInt(bookId!))
     }, [bookId]);
 
-    console.log(book)
+    //console.log(book)
     //const details = book === undefined ?
     //    <p>no book</p>
     //    :
@@ -57,6 +57,7 @@ export const BookDetailsBlock = (bookId: string) => {
 export const BookDetails = () => {
     const { bookId } = useParams()
     const { username, isadmin } = useAuth();
+    const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
     //const detailsBlock = 
     const header = Header();
     const footer = Footer();
@@ -65,6 +66,7 @@ export const BookDetails = () => {
         {header}
             <div>
                 <h1>Details</h1>
+                { feedback}
                 {BookDetailsBlock(bookId!)}
                 <div>
                     {!isadmin && username ?
@@ -85,8 +87,18 @@ export const BookDetails = () => {
     </div>
     )
 
-    function onReserve(bookId: string) {
+    async function onReserve(bookId: string) {
         console.log('reserving');
+        const response = await fetch('/books/reserve/' + bookId);
+        if (response.status == 409) {
+            setFeedback(<div style={{ color: "red" }} >Book is already leased</div>);
+            return
+        }
+        else if (response.ok) {
+            setFeedback(<div style={{ color: "green" }} >Book has beeen reserved</div>);
+            return;
+        }
+        setFeedback(<div style={{ color: "red" }} >User not logged in or id is null</div>);
         return
     }
 }
