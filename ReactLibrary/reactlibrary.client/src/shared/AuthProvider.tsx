@@ -2,7 +2,7 @@ import { useState, createContext, useContext, PropsWithChildren } from 'react';
 
 
 type AuthContext = {
-    role?: string | null
+    isadmin?: bool | null
     username?: string | null
     handleLogin: (data) => Promise<number>;
     handleLogout: () => Promise<void>;
@@ -13,7 +13,7 @@ const authContext = createContext<AuthContext | undefined>(undefined)
 type AuthProviderProps = PropsWithChildren
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [role, setRole] = useState<string | undefined>();
+    const [isadmin, setIsadmin] = useState<bool | undefined>();
     const [username, setUsername] = useState<string | undefined>();
 
 
@@ -29,29 +29,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (response.ok) {
             const data = await response.json();
             console.log(data)
-            setRole(data.role)
+            setIsadmin(data.isadmin)
             setUsername(data.username)
             return 200;
         }
         else if (response.status == 406) {
-            setRole(undefined)
+            setIsadmin(undefined)
             setUsername(undefined)
             return 406;
         }
         else {
-            setRole(undefined)
+            setIsadmin(undefined)
             setUsername(undefined)
             return 400;
         }
     }
 
     async function handleLogout() {
-        //make call to user/logout
+        console.log("in handle logout")
+        const response = await fetch('/user/logout');
+        if (response.ok) {
+            console.log("logout")
+            setIsadmin(null)
+            setUsername(null)
+            return 200;
+        }
     }
 
     return <authContext.Provider
         value={{
-            role,
+            isadmin,
             username,
             handleLogin,
             handleLogout,

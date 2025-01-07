@@ -129,7 +129,7 @@ namespace ReactLibrary.Server.Controllers
                     }
                     var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                     HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                    return Results.Json(new { username = user.userName, role = user.admin });
+                    return Results.Json(new { username = user.userName, isadmin = user.admin });
                 }
                 else
                 {
@@ -140,10 +140,14 @@ namespace ReactLibrary.Server.Controllers
             return Results.StatusCode(401);
         }
 
+        [HttpGet]
+        [Route("logout")]
+        [Authorize]
         public IActionResult LogOut()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            return Ok();
+            //return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]

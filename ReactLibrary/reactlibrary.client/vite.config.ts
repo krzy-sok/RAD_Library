@@ -81,6 +81,10 @@ export default defineConfig({
                 target,
                 secure: false,
             },
+            '^/user/logout': {
+                target,
+                secure: false,
+            },
             '^/user/info': {
                 target,
                 secure: false,

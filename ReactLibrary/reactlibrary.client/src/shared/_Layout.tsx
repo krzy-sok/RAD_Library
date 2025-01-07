@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from './AuthProvider'
 
 
 export const Header =  () => {
     const title = "ReactLibarary"
+    const { isadmin } = useAuth();
 
     return (
         <header>
@@ -32,16 +34,17 @@ export const Header =  () => {
                             <li className="nav-item">
                                 <Link className="nav-link text-dark" to="/catalogue">Catalogue</Link>
                             </li>
-                            {/*{isAdmin && (*/}
-                            {/*    <>*/}
-                            {/*        <li className="nav-item">*/}
-                            {/*            <Link className="nav-link text-dark" to="/book-leases">Book Leases</Link>*/}
-                            {/*        </li>*/}
-                            {/*        <li className="nav-item">*/}
-                            {/*            <Link className="nav-link text-dark" to="/library-users">Library Users</Link>*/}
-                            {/*        </li>*/}
-                            {/*    </>*/}
-                            {/*)}*/}
+                            {isadmin ? 
+                                <>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-dark" to="/book-leases">Book Leases</Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link className="nav-link text-dark" to="/library-users">Library Users</Link>
+                                    </li>
+                                </>
+                                : null
+                            }
                         </ul>
                          {/*Replace with your Login component logic */}
                         <LoginPartial />
@@ -64,14 +67,10 @@ export const Footer= () => {
 }
 
 export const LoginPartial = () => {
-    const [userName, setUserName] = useState<string>();
-
-    useEffect(() => {
-        checkIfLoggedIn();
-    }, []);
+    const { username, handleLogout } = useAuth();
 
     return (
-        userName === undefined
+        username === undefined || username == null
             ? <ul className="nav navbar-nav navbar-right">
                 <li>
                     <Link className="nav-link text-dark" to="/registration">Register</Link>
@@ -82,24 +81,11 @@ export const LoginPartial = () => {
             </ul>
             : <ul className="nav navbar-nav navbar-right">
                 <li>
-                    <h6>Hello {userName} </h6>
+                    Hello {username}       
                 </li>
                 <li>
-                    <button className="btn btn-link navbar-btn navbar-link" onClick={Logout}>Log out</button>
+                    <button className="btn btn-link navbar-btn navbar-link" onClick={handleLogout}>Log out</button>
                 </li>
             </ul> 
     );
-
-    async function checkIfLoggedIn() {
-        const response = await fetch('/user/info')
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data)
-            setUserName(data.username);
-        }
-    }
-
-    async function Logout() {
-
-    }
 }
