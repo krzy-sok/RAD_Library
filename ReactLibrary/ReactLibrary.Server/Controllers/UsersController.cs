@@ -14,7 +14,9 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ReactLibrary.Server.Views
 {
-    public class UsersController : Controller
+    [ApiController]
+    [Route("users")]
+    public class UsersController : ControllerBase
     {
         private readonly ReactLibraryContext _context;
 
@@ -24,32 +26,31 @@ namespace ReactLibrary.Server.Views
         }
 
         [Authorize(Policy = "Librarian")]
-        // GET: Users
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IEnumerable<User> Index()
         {
               return _context.User != null ? 
-                          View(await _context.User.ToListAsync()) :
-                          Problem("Entity set 'ReactLibraryContext.User'  is null.");
+                           _context.User.ToList() : [];
         }
 
 
         [Authorize(Policy = "Librarian")]
-        // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+        [HttpGet("{id:int}")]
+        public IResult Details(int? id)
         {
             if (id == null || _context.User == null)
             {
-                return NotFound();
+                return Results.NotFound();
             }
 
-            var user = await _context.User
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var user = _context.User
+                .FirstOrDefault(m => m.Id == id);
             if (user == null)
             {
-                return NotFound();
+                return Results.NotFound();
             }
 
-            return View(user);
+            return Results.Json(user);
         }
     }
 }

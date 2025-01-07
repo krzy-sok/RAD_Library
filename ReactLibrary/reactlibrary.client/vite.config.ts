@@ -89,7 +89,11 @@ export default defineConfig({
                 target,
                 secure: false,
                 //rewrite: path => {return '/user/test'}
-            }
+            },
+            '^/users': {
+                target,
+                secure: false,
+            },
         },
         port: 53747,
         https: {

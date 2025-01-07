@@ -11,6 +11,7 @@ import { BookEdit, BookCreate } from "./books/BookEdit.tsx"
 import { LoginForm } from "./LoginComponent.tsx"
 import { RegisterForm } from "./RegisterComponent.tsx"
 import { AuthProvider } from "./shared/AuthProvider.tsx"
+import { UsersList } from "./users/UsersList.tsx"
 
 
 createRoot(document.getElementById('root')!).render(
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path='/createBook' element={<BookCreate />} />
                     <Route path='/login' element={<LoginForm />} />
                     <Route path='/registration' element={<RegisterForm />} />
+                    <Route path='/library-users' element={<UsersList />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
