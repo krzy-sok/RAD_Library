@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Header, Footer } from '../shared/_Layout';
 import { useAuth } from '../shared/AuthProvider';
-import { Link, Navigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 // Define the User interface based on the model
 export interface User {
@@ -33,14 +33,11 @@ const UserTable = () => {
         <table className="table">
             <thead>
                 <tr>
-                    <th>Title</th>
-                    <th>Author</th>
-                    <th>Publisher</th>
-                    <th>Publication Date</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    
-                    <th>Actions</th>
+                    <th>User Name</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
                 </tr>
             </thead>
             <tbody>
