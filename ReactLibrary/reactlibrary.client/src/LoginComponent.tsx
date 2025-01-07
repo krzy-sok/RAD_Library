@@ -10,7 +10,7 @@ import { Navigate } from 'react-router-dom';
 export const LoginForm = () => {
     const methods = useForm();
     const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
-    const { handleLogin } = useAuth();
+    const { handleLogin, username } = useAuth();
 
     const onSubmit = methods.handleSubmit(data => {
         console.log(data)
@@ -19,7 +19,7 @@ export const LoginForm = () => {
         LoginWrapper(data);
         return <Navigate to="/catalogue" />
     })
-    return (
+    return (username ? <Navigate to="/catalogue" /> :
         <div>
             <Header />
             <div>
