@@ -171,17 +171,20 @@ namespace ReactLibrary.Server.Controllers
                 return Problem("Entity set 'ReactLibraryContext.Book'  is null.");
             }
             var book = _context.Book.Find(boookId);
-            Console.Out.WriteLine($"***************\n \n {book.Author} \n \n ********************8");
+            Console.Out.WriteLine($"***************\n \n {book} \n \n ********************8");
             if (book != null)
             {
-                if (book.Status != "Available")
+                Console.Out.WriteLine($"***************\n \n book not null \n \n ********************8");
+                if (book.Status != "Available" && book.Status != null)
                 {
+                    Console.Out.WriteLine($"***************\n \n forbidden \n \n ********************8");
                     //TempData["error"] = $"Book {book.Title} cannot be deleted now";
                     //return RedirectToAction(nameof(Index));
                     return Forbid();
                 }
                 if (_context.Leases.Where(l => l.book == book).ToList().Count() != 0)
                 {
+                    Console.Out.WriteLine($"***************\n \n book hidden \n \n ********************8");
                     book.Hidden = true;
                     _context.Book.Update(book);
                     //TempData["result"] = $"Book {book.Title} has been hidden";
@@ -190,6 +193,7 @@ namespace ReactLibrary.Server.Controllers
                 }
                 else
                 {
+                    Console.Out.WriteLine($"***************\n \n book removed \n \n ********************8");
                     _context.Book.Remove(book);
                     //TempData["result"] = $"Book {book.Title} has been deleted";
                     await _context.SaveChangesAsync();

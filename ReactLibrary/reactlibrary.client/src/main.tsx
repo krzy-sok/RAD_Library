@@ -4,13 +4,13 @@ import { createRoot } from 'react-dom/client'
 import "./css/bootstrap.min.css"
 import "./css/site.css"
 import App from './App.tsx'
-import { Catalogue } from "./Catalogue.tsx"
+import { Catalogue } from "./books/Catalogue.tsx"
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { BookDetails, BookDelete } from "./BookCrud.tsx"
-import { BookEdit, BookCreate } from "./BookEdit.tsx"
+import { BookDetails, BookDelete } from "./books/BookDetails.tsx"
+import { BookEdit, BookCreate } from "./books/BookEdit.tsx"
 import { LoginForm } from "./LoginComponent.tsx"
 import { RegisterForm } from "./RegisterComponent.tsx"
-import { AuthProvider } from "./LoginComponent.tsx"
+import { AuthProvider } from "./shared/AuthProvider.tsx"
 
 
 createRoot(document.getElementById('root')!).render(

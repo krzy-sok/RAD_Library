@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Header, Footer } from './shared/_Layout'
+import { Header, Footer } from '../shared/_Layout'
 
 // Define the Book interface based on the model
 export interface Book {

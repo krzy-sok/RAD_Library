@@ -1,20 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-//interface LayoutProps {
-//    children: React.ReactNode;
-//    title?: string;
-//    result?: string;
-//    error?: string;
-//    isAdmin: boolean;
-//}
-//{ children, title = "Library", result, error, isAdmin }
-
 
 export const Header =  () => {
     const title = "ReactLibarary"
 
-    //const loginPartial = LoginPartial();
     return (
         <header>
             <nav className="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">

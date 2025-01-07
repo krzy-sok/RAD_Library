@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Header, Footer } from './shared/_Layout'
+import { Header, Footer } from '../shared/_Layout'
 import { useParams } from 'react-router-dom';
 import { Book } from "./Catalogue"
 

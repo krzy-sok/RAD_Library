@@ -1,15 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Header, Footer } from './shared/_Layout'
+import { Header, Footer } from '../shared/_Layout'
 import { useParams } from 'react-router-dom';
 import { Book } from "./Catalogue"
-import { useForm, FormProvider, useFormContext } from "react-hook-form";
-import { InputField} from "./shared/InputField"
+import { useForm, FormProvider } from "react-hook-form";
+import { InputField} from "../shared/InputField"
 
-
-//interface ValidationErrors {
-//    title: string,
-//    author: string
-//}
 
 export const EditBookForm = (bookId:string, create=false) => {
     const [book, setBook] = useState<Book>()
