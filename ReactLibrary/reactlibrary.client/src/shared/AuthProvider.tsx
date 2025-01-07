@@ -13,7 +13,7 @@ const authContext = createContext<AuthContext | undefined>(undefined)
 type AuthProviderProps = PropsWithChildren
 
 export function AuthProvider({ children }: AuthProviderProps) {
-    const [isadmin, setIsadmin] = useState<bool | undefined>();
+    const [isadmin, setIsadmin] = useState<boolean | undefined>();
     const [username, setUsername] = useState<string | undefined>();
 
 
