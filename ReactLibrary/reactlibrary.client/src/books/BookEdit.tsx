@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Header, Footer } from '../shared/_Layout'
 import { useParams } from 'react-router-dom';
-import { Book } from "./Catalogue"
+import { Book } from "./Catalogue";
 import { useForm, FormProvider } from "react-hook-form";
-import { InputField} from "../shared/InputField"
+import { InputField } from "../shared/InputField";
+import { Link, Navigate } from 'react-router-dom';
+import { useAuth } from '../shared/AuthProvider';    
 
 
 export const EditBookForm = (bookId:string, create=false) => {
@@ -53,7 +55,7 @@ export const EditBookForm = (bookId:string, create=false) => {
                             </button>
                         </div>
                         <div>
-                            <a href="/catalogue" > Back to List </a>
+                            <Link to="/catalogue" > Back to List </Link>
                         </div>
                     </form>
                 </FormProvider>
@@ -122,13 +124,15 @@ export const BookEdit = () => {
     const { bookId } = useParams()
     const header = Header();
     const footer = Footer();
-    return (
+    const { isadmin } = useAuth();
+    return ( isadmin?
         <div>
             {header}
             <h1>Edit </h1>
             {EditBookForm(bookId!)}
             {footer}
         </div>
+        : <Navigate to="/catalogue" />
     )
 
 }
@@ -137,12 +141,14 @@ export const BookCreate = () => {
     //const { bookId } = useParams()
     const header = Header();
     const footer = Footer();
-    return (
+    const { isadmin } = useAuth();
+    return (isadmin? 
         <div>
             {header}
             <h1>Create </h1>
             {EditBookForm("0", true)}
             {footer}
         </div>
+        : <Navigate to="/catalogue" />
     )
 }

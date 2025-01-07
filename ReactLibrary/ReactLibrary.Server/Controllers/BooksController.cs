@@ -57,26 +57,12 @@ namespace ReactLibrary.Server.Controllers
             Console.Out.WriteLine("***************\n \n in details \n \n ********************8");
             var book = _context.Book
                 .FirstOrDefault(m => m.Id == bookId);
-            //if (book == null)
-            //{
-            //    return new Book[{ }];
-            //}
 
             return book;
         }
 
-        //// GET: Books/Create
-        //[Authorize(Policy = "Librarian")]
-        //public IActionResult Create()
-        //{
-        //    return View();
-        //}
-
-        //// POST: Books/Create
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[ValidateAntiForgeryToken]
-        //[Authorize(Policy = "Librarian")]
+        [Authorize(Policy = "Librarian")]
         [HttpPost]
         public async Task<IActionResult> Create(Book book)
         {
@@ -87,29 +73,11 @@ namespace ReactLibrary.Server.Controllers
             return StatusCode(201);
         }
 
-        // GET: Books/Edit/
-        //[Authorize(Policy = "Librarian")]
-        //[HttpGet("edit/")]
-        //public Book Edit(int bookId)
-        //{
-        //    if (bookId == null || _context.Book == null)
-        //    {
-        //        return null;
-        //    }
-
-        //    var book =  _context.Book.Find(bookId);
-        //    //if (book == null)
-        //    //{
-        //    //    return NotFound();
-        //    //}
-        //    return book;
-        //}
-
         // POST: Books/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         //[ValidateAntiForgeryToken]
-        //[Authorize(Policy = "Librarian")]
+        [Authorize(Policy = "Librarian")]
         [HttpPut("{bookId:int}")]
         public async Task<IActionResult> Edit(int bookId, Book book)
         {
@@ -140,29 +108,8 @@ namespace ReactLibrary.Server.Controllers
             return Ok();
         }
 
-        // GET: Books/Delete/5
-        //[Authorize(Policy = "Librarian")]
-        //[HttpDelete("{bookId: int}")]
-        //public async Task<IActionResult> Delete(int? bookId)
-        //{
-        //    if (bookId == null || _context.Book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var book = await _context.Book
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (book == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(book);
-        //}
-
-
         //[ValidateAntiForgeryToken]
-        //[Authorize(Policy = "Librarian")]
+        [Authorize(Policy = "Librarian")]
         [HttpDelete("{boookId:int}")]
         public async Task<IActionResult> Delete(int boookId)
         {

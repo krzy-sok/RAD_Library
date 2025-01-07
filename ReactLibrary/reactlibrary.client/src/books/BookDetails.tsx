@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Header, Footer } from '../shared/_Layout'
 import { useParams } from 'react-router-dom';
 import { Book } from "./Catalogue"
+import { useAuth } from '../shared/AuthProvider';
+import { Link, Navigate} from 'react-router-dom';
 
 export const BookDetailsBlock = (bookId: string) => {
     const [book, setBook] = useState<Book>()
@@ -54,6 +56,7 @@ export const BookDetailsBlock = (bookId: string) => {
 
 export const BookDetails = () => {
     const { bookId } = useParams()
+    const { username, isadmin } = useAuth();
     //const detailsBlock = 
     const header = Header();
     const footer = Footer();
@@ -64,22 +67,25 @@ export const BookDetails = () => {
                 <h1>Details</h1>
                 {BookDetailsBlock(bookId!)}
                 <div>
-                    {/*Conditional rendering based on user role and authentication */}
-                    {/*{user?.isAuthenticated && !user?.roles.includes('Admin') && book?.id && (*/}
-                    <button onClick={() => onReserve(book.id)} className="btn btn-primary">
-                        Reserve
-                    </button>
-                    {/*)}*/}
-                    <a href={`/editBook/${bookId}`}>Edit</a>
+                    {!isadmin && username ?
+                        <button onClick={() => onReserve(bookId!)} className="btn btn-primary">
+                            Reserve
+                        </button>
+                        : null
+                    }
+                    {isadmin ? 
+                        <Link to={`/editBook/${bookId}`}>Edit</Link>
+                        : null
+                    }
                     {' | '}
-                    <a href={'/catalogue'}>Back to list</a>
+                    <Link to={'/catalogue'}>Back to list</Link>
                 </div>
         </div>
         {footer}
     </div>
     )
 
-    function onReserve(bookId: number) {
+    function onReserve(bookId: string) {
         console.log('reserving');
         return
     }
@@ -91,7 +97,8 @@ export const BookDelete = () => {
     //const detailsBlock = 
     const header = Header();
     const footer = Footer();
-    return (
+    const { isadmin } = useAuth();
+    return (isadmin?
         <div>
             {header}
             <div>
@@ -106,11 +113,12 @@ export const BookDelete = () => {
                     </button>
                     {/*)}*/}
                     {' | '}
-                    <a href={'/catalogue'}>Back to list</a>
+                    <Link to={'/catalogue'}>Back to list</Link>
                 </div>
             </div>
             {footer}
         </div>
+        : <Navigate to="/catalogue" />
     );
 
     async function DeleteConfirmed(bookId: number) {

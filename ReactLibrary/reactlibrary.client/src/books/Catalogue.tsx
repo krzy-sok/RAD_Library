@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Header, Footer } from '../shared/_Layout'
+import { Header, Footer } from '../shared/_Layout';
+import { useAuth } from '../shared/AuthProvider';
+import { Link } from 'react-router-dom';
 
 // Define the Book interface based on the model
 export interface Book {
@@ -21,6 +23,7 @@ export interface Book {
 
 const BookTable = () => {
     const [books, setBooks] = useState<Book[]>();
+    const { isadmin } = useAuth();
 
     useEffect(() => {
         populateBookData();
@@ -52,9 +55,15 @@ const BookTable = () => {
                         <td>{book.price}</td>
                         <td>{book.status}</td>
                         <td>
-                            <a href={`/detailsBook/${book.id}`}>Details</a> |
-                            <a href={`/editBook/${book.id}`}>Edit</a> |
-                            <a href={`/deleteBook/${book.id}`}>Delete</a>
+                            <Link to={`/detailsBook/${book.id}`}>Details</Link>
+                            {isadmin ?
+                                <>
+                                    | <Link to={`/editBook/${book.id}`}>Edit</Link> |
+                                    <Link to={`/deleteBook/${book.id}`}>Delete</Link>
+                                </>
+                                : null
+                            }
+
                         </td>
                     </tr>
                 ))}
@@ -70,12 +79,14 @@ const BookTable = () => {
             {header}
             <div>
                 <h1>Books List</h1>
-                <p></p>
-                <a href="/createBook" >
-                    <button className="btn btn-primary">
-                        Create New book
-                    </button>
-                </a>
+                {isadmin
+                    ? <Link to="/createBook" >
+                        <button className="btn btn-primary">
+                            Create New book
+                        </button>
+                    </Link>
+                    : null
+                }
                 {contents}
             </div>
             {footer}

@@ -3,6 +3,7 @@ import { Header, Footer } from './shared/_Layout';
 import { useForm, FormProvider } from "react-hook-form";
 import { InputField } from "./shared/InputField"
 import { useAuth } from "./shared/AuthProvider"
+import { Navigate } from 'react-router-dom';
 
 
 
@@ -15,7 +16,8 @@ export const LoginForm = () => {
         console.log(data)
         //make put request to /user
 
-       LoginWrapper(data);
+        LoginWrapper(data);
+        return <Navigate to="/catalogue" />
     })
     return (
         <div>
