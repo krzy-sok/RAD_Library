@@ -29,9 +29,6 @@ export const Header =  () => {
                                 <Link className="nav-link text-dark" to="/">Home</Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link text-dark" to="/privacy">Privacy</Link>
-                            </li>
-                            <li className="nav-item">
                                 <Link className="nav-link text-dark" to="/catalogue">Catalogue</Link>
                             </li>
                             {isadmin ? 
