@@ -75,6 +75,7 @@ export const EditBookForm = (bookId:string, create=false) => {
     }
 
     async function makePUTrequest(data) {
+        data.status = book!.status
         console.log(data)
         //call to api /book/bookID with PUT method
         console.log("\n*******\n\n PUT request \n\n *********\n")
