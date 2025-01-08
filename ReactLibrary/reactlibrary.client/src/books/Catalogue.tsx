@@ -41,7 +41,7 @@ const BookTable = () => {
                     <th>Publication Date</th>
                     <th>Price</th>
                     <th>Status</th>
-                    
+                    {isadmin ? <th>Hidden</th>: null}
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -54,6 +54,7 @@ const BookTable = () => {
                         <td>{book.publicationDate}</td>
                         <td>{book.price}</td>
                         <td>{book.status}</td>
+                        {isadmin ? <td>{book.hidden.toString()}</td> : null}
                         <td>
                             <Link to={`/detailsBook/${book.id}`}>Details</Link>
                             {isadmin ?
