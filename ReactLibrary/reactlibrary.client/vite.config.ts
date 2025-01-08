@@ -99,6 +99,10 @@ export default defineConfig({
                 secure: false,
                 //rewrite: path => {return '/user/test'}
             },
+            '^/user/delete': {
+                target,
+                secure: false,
+            },
             '^/user/details': {
                 target,
                 secure: false,
@@ -127,11 +131,19 @@ export default defineConfig({
                 target,
                 secure: false,
             },
+            '^/user/unlease/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]/(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}={2})$': {
+                target,
+                secure: false,
+            },
             '^/leases/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
                 target,
                 secure: false,
             },
             '^/leases/return/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
+                target,
+                secure: false,
+            },
+            '^/leases/delete/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
                 target,
                 secure: false,
             },

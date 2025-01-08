@@ -17,6 +17,7 @@ import { UserDetails } from "./users/UserDetails.tsx"
 import { LeaseDetails } from "./leases/LeaseDetails.tsx"
 import { UserLeases } from "./users/UserLeases.tsx"
 import { LeaseEdit } from "./leases/LeaseEdit.tsx"
+import { DeleteUser } from "./users/UserDelete.tsx"
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -35,6 +36,7 @@ createRoot(document.getElementById('root')!).render(
                     <Route path='/book-leases' element={<LeaseList />} />
                     <Route path='/book-leases/inactive' element={<LeaseListInactive />} />
                     <Route path='/user' element={<UserDetails />} />
+                    <Route path='/user/delete' element={<DeleteUser />} />
                     <Route path='/user-leases' element={<UserLeases />} />
                     <Route path='/leaseDetails/:leaseId' element={<LeaseDetails />} />
                     <Route path='/editLease/:leaseId' element={<LeaseEdit />} />

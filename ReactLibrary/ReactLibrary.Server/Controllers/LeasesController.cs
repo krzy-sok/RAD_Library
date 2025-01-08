@@ -101,13 +101,14 @@ namespace ReactLibrary.Server.Views
         }
 
         // POST: Leases/Delete/5
-        [HttpDelete]
+        [HttpDelete("delete/{id:int}")]
         [Authorize(Policy = "Librarian")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            Console.WriteLine("\n*****\n\n delete leas \n\n ***** \n");
             if (_context.Leases == null)
             {
-                return Problem("Entity set 'ReactLibraryContext.Leases'  is null.");
+                return BadRequest();
             }
             var leases = await _context.Leases.FindAsync(id);
 
@@ -115,17 +116,9 @@ namespace ReactLibrary.Server.Views
             {
                 _context.Leases.Remove(leases);
                 await _context.SaveChangesAsync();
-                //_context.Entry(leases).Property("RowVersion").OriginalValue = RowVersion;
-                //try 
-                //{
-
-                //}
-                //catch(DbUpdateConcurrencyException ex)
-                //{
-                //    TempData["error"] = "Concurrency event. Changes not made. Please refresh the page";
-                //}
+                return Ok();
             }
-            return RedirectToAction(nameof(Index));
+            return NotFound();
         }
 
         [Authorize(Policy = "Librarian")]

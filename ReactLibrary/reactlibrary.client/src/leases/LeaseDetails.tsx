@@ -9,8 +9,8 @@ import { Link, Navigate} from 'react-router-dom';
 
 export const LeaseDetailsBlock = (leaseId: string) => {
     const [lease, setLease] = useState<Lease>()
+    const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
 
-    console.log("lease id pre parse:"+ leaseId)
 
     useEffect(() => {
         getLease(parseInt(leaseId!))
@@ -20,6 +20,7 @@ export const LeaseDetailsBlock = (leaseId: string) => {
         lease === undefined ? <p>no lease</p> :
             <div>
                 <h4>Lease</h4>
+                { feedback}
                 <hr />
                 <dl className="row">
                     <dt className="col-sm-2">Book Title</dt>
@@ -43,19 +44,30 @@ export const LeaseDetailsBlock = (leaseId: string) => {
                     <dt className="col-sm-2">Type</dt>
                     <dd className="col-sm-10">{lease.type}</dd>
                 </dl>
-                    <button onClick={() => Unreserve(parseInt(leaseId!))} className="btn btn-primary">
+                <button onClick={() => Unreserve(lease.rowVersion)} className="btn btn-primary">
                         Revert reservation
-                    </button>
+                </button>
+                <Link to="/user-leases">Back to list</Link>
             </div>
 
     );
 
-    async function Unreserve(leaseId: number) {
-        console.log(leaseId)
+    async function Unreserve(version: string) {
+        console.log("/user/unlease/" + leaseId + "/" + version)
+        const response = await fetch("/user/unlease/" + leaseId + "/" + version);
+        console.log(response.status)
+        if (response.status == 200) {
+            setFeedback(<div style={{ color: "green" }} >Removed reservation of { lease.book.title}</div>);
+        }
+        else if (response.status == 409) {
+            setFeedback(<div style={{ color: "red" }} > DB concurrency event! Refresh page and try again</div>)
+        }
+        else {
+            setFeedback(<div style={{ color: "red" }} >Unexpected error while removing reservation</div>);
+        }
     }
 
     async function getLease(leaseId: number) {
-        console.log("lease id: "+leaseId)
         const response = await fetch('/leases/details/' + leaseId);
         if (response.ok) {
             const data = await response.json();
@@ -82,59 +94,6 @@ export const LeaseDetails = () => {
         </div>
     : <Navigate to="/" />
     )
-}
-
-export const LeaseDelete = () => {
-    const { leaseId } = useParams()
-    const [feedback, setFeedback] = useState<JSX.Element>(<div></div>)
-    //const detailsBlock = 
-    const header = Header();
-    const footer = Footer();
-    const { isadmin } = useAuth();
-    return (isadmin?
-        <div>
-            {header}
-            <div>
-                <h1>Delete</h1>
-                {feedback}
-                {LeaseDetailsBlock(leaseId!)}
-                <div>
-                    {/*Conditional rendering based on user role and authentication */}
-                    {/*{user?.isAuthenticated && !user?.roles.includes('Admin') && lease?.id && (*/}
-                    <button onClick={() => DeleteConfirmed(parseInt(leaseId!))} className="btn btn-danger">
-                        Delete
-                    </button>
-                    {/*)}*/}
-                    {' | '}
-                    <Link to={'/catalogue'}>Back to list</Link>
-                </div>
-            </div>
-            {footer}
-        </div>
-        : <Navigate to="/catalogue" />
-    );
-
-    async function DeleteConfirmed(leaseId: number) {
-        console.log(`deleting lease of id {leaseID}`);
-        //make api call to lease/id as http delete
-        const requestOptions = {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-        };
-        const response = await fetch('/lease/' + leaseId, requestOptions);
-        if (response.status == 403) {
-            setFeedback(<div style={{ color: "red" }} >Cannot delete leased lease</div>);
-        }
-        else if (response.status == 202) {
-            setFeedback(<div style={{ color: "green" }} >Lease hidden</div>);
-        }
-        else if (response.ok) {
-            setFeedback(<div style={{ color: "green" }} >Lease deleted</div>);
-        }
-        else {
-            setFeedback(<div style={{ color: "red" }} >Lease does not exist or different error occured</div>);
-        }
-    }
 }
 
 

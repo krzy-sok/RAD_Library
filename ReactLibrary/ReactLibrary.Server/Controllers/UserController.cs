@@ -167,12 +167,11 @@ namespace ReactLibrary.Server.Controllers
             return username != null ? Results.Json(new { username = username, role = role }) : Results.Json(new { username = "none" });
         }
 
-        //POST: Users/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpDelete("delete")]
         [Authorize]
         public async Task<IActionResult> DeleteConfirmed(DeleteViewModel model)
         {
+            Console.WriteLine("\n******\n\n deleting asshole \n\n *******\n");
             string hash = HashPasswd(model.password);
             var user = _context.User.Where(x => (x.email == model.userEmail) && x.password == hash).FirstOrDefault();
             CheckExpiery();
@@ -215,6 +214,7 @@ namespace ReactLibrary.Server.Controllers
         public async Task<IActionResult> Unlease([FromRoute] int id, [FromRoute] string version)
         {
             byte[] rowversion = System.Convert.FromBase64String(version);
+            Console.WriteLine("\n******\n\n in unlease \n\n*****\n");
             if (id != null)
             {
                 Leases lease = _context.Leases.Where(l => l.Id == id).Include(b => b.book).FirstOrDefault();
@@ -224,7 +224,7 @@ namespace ReactLibrary.Server.Controllers
 
                 if (book != null)
                 {
-                    //_context.Entry(lease).Property("RowVersion").OriginalValue = rowversion;
+                    _context.Entry(lease).Property("RowVersion").OriginalValue = rowversion;
                     book.Status = "Available";
                     try
                     {
