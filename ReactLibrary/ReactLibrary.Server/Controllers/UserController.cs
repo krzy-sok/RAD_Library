@@ -49,15 +49,20 @@ namespace ReactLibrary.Server.Controllers
             return Encoding.UTF8.GetString(hashValue);
         }
 
-        //[Authorize]
-        //public IActionResult Index()
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        return RedirectToAction("Index", "Home");
-        //    }
-        //    return View();
-        //}
+        [Authorize]
+        [HttpGet]
+        [Route("details")]
+        public IResult Index()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                //return RedirectToAction("Index", "Home");
+                return Results.Forbid();
+            }
+            var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
+            var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
+            return Results.Json(user);
+        }
         [HttpGet]
         [Route("test")]
         public IActionResult test() {
@@ -191,19 +196,23 @@ namespace ReactLibrary.Server.Controllers
         }
 
         // GET: Leases
-        public async Task<IActionResult> UserLeases()
+        [HttpGet]
+        [Route("leases")]
+        public IResult UserLeases()
         {
             CheckExpiery();
             var email = User.Claims.Where(c => c.Type == ClaimTypes.Email).FirstOrDefault().Value;
             var user = _context.User.Where(x => (x.email == email)).FirstOrDefault();
-            var UserLeases = await _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToListAsync();
+            var UserLeases =  _context.Leases.Where(l => l.user == user && l.Active == true).Include(b => b.book).ToList();
             Console.WriteLine($"**************\n in user leases \n *****************");
             return _context.Leases != null ?
-                        Ok() :
-                        Problem("Entity set 'ReactLibraryContext.Leases'  is null.");
+                        Results.Json(UserLeases):
+                        Results.Problem("Entity set 'ReactLibraryContext.Leases'  is null.");
         }
 
-        public async Task<IActionResult> Unlease(int id, string version)
+
+        [HttpGet("unlease/{id}/{version}")]
+        public async Task<IActionResult> Unlease([FromRoute] int id, [FromRoute] string version)
         {
             byte[] rowversion = System.Convert.FromBase64String(version);
             if (id != null)

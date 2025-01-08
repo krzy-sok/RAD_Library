@@ -80,9 +80,9 @@ export const LoginPartial = () => {
                 </li>
             </ul>
             : <ul className="nav navbar-nav navbar-right">
-                <li>
+                <Link to="/user">
                     Hello {username}       
-                </li>
+                </Link>
                 <li>
                     <button className="btn btn-link navbar-btn navbar-link" onClick={handleLogout}>Log out</button>
                 </li>

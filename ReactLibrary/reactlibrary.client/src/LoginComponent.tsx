@@ -19,7 +19,7 @@ export const LoginForm = () => {
         LoginWrapper(data);
         return <Navigate to="/catalogue" />
     })
-    return (username ? <Navigate to="/catalogue" /> :
+    return (username ? <Navigate to="/" /> :
         <div>
             <Header />
             <div>

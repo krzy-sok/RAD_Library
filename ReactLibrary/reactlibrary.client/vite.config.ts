@@ -99,11 +99,42 @@ export default defineConfig({
                 secure: false,
                 //rewrite: path => {return '/user/test'}
             },
+            '^/user/details': {
+                target,
+                secure: false,
+            },
             '^/users': {
                 target,
                 secure: false,
             },
-
+            '^/leases': {
+                target,
+                secure: false,
+            },
+            '^/leases/inactive': {
+                target,
+                secure: false,
+            },
+            '^/user/leases': {
+                target,
+                secure: false,
+            },
+            '^/leases/details/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
+                target,
+                secure: false,
+            },
+            '^/leases/lease/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]/(?:[A-Za-z0-9+\/]{4})*(?:[A-Za-z0-9+\/]{4}|[A-Za-z0-9+\/]{3}=|[A-Za-z0-9+\/]{2}={2})$': {
+                target,
+                secure: false,
+            },
+            '^/leases/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
+                target,
+                secure: false,
+            },
+            '^/leases/return/[01]?[0-9][0-9]?|2[0-4][0-9]|25[0-5]': {
+                target,
+                secure: false,
+            },
         },
         port: 53747,
         https: {

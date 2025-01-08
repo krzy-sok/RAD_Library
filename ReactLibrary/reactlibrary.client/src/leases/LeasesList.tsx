@@ -7,13 +7,14 @@ import { User } from "../users/UsersList"
 
 // Define the Lease interface based on the model
 export interface Lease {
-    Id: number;
+    id: number;
     leaseStart?: string;
     leaseEnd?: string;
     book: Book;
     user: User;
     type: string;
     active: boolean;
+    rowVersion: string;
 }
 
 // Define the Props interface for the component
@@ -22,16 +23,31 @@ export interface Lease {
 //    isAdmin: boolean; // Assuming you pass whether the user is an admin or not
 //}
 
-const LeaseTable = () => {
+const LeaseTable = ( showInactive = false ) => {
     const [leases, setLeases] = useState<Lease[]>();
-    const { isadmin } = useAuth();
-    const [ showInactive, setShowInactive ] = useState<boolean>(false);
+
 
     useEffect(() => {
         populateLeaseData();
     }, []);
 
-    const contents = leases === undefined
+    async function populateLeaseData() {
+        let response
+        if (showInactive) {
+            response = await fetch('/leases/inactive');
+        }
+        else {
+            response = await fetch('leases');
+        }
+        console.log(response)
+        if (response.ok) {
+            const data = await response.json();
+            console.log(data)
+            setLeases(data);
+        }
+    }
+
+    return (leases === undefined
         ? <p><em>Loading... Please refresh once the ASP.NET backend has started</em></p>
         :
         <table className="table">
@@ -42,73 +58,73 @@ const LeaseTable = () => {
                     <th>Start date</th>
                     <th>End date</th>
                     <th>Type</th>
-                    
+
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {leases.map((lease) => (
-                    <tr key={lease.Id}>
+                    <tr key={lease.id}>
                         <td>{lease.book.title}</td>
                         <td>{lease.user.userName}</td>
                         <td>{lease.leaseStart}</td>
                         <td>{lease.leaseEnd}</td>
                         <td>{lease.type}</td>
                         <td>
-                        <>
-                            <Link to={`/editLease/${lease.Id}`}>Edit</Link> |
-                            <Link to={`/deleteLease/${lease.Id}`}>Delete</Link>
-                        </>
+                            <>
+                                <Link to={`/editLease/${lease.id}`}>Edit</Link>
+                            </>
                         </td>
                     </tr>
                 ))}
             </tbody>
-        </table>;
-
-
-    const header = Header();
-    const footer = Footer();
-
-    const changeInactive = () => {
-        setShowInactive(!showInactive)
-    }
-
-    return ( isadmin?
-        <div>
-            {header}
-            <button className="btn btn-primary" onClick={changeInactive}>
-                See {showInactive ? <>active</>  : <>inactive</> }
-            </button>
-            <div>
-                <h1>Leases List</h1>
-                {contents}
-            </div>
-            {footer}
-        </div>
-        : <Navigate to="/" />
+        </table>
     );
-
-
-    async function populateLeaseData() {
-        let response
-        if (showInactive) {
-            response = await fetch('leases');
-        }
-        else {
-            response = await fetch('leases/inactive');
-        }
-        console.log(response)
-        if (response.ok) {
-            const data = await response.json();
-            console.log(data)
-            setLeases(data);
-        }
-    }
 };
 
 
 export const LeaseList = () => {
-    return LeaseTable()
+    const { isadmin } = useAuth();
+    const header = Header();
+    const footer = Footer();
+    return (
+        isadmin ?
+            <div>
+                {header}
+                <Link to='/book-leases/inactive'>
+                    See inactive
+                </Link>
+
+                <div>
+                    <h1>Leases List</h1>
+                    {LeaseTable(false)}
+                </div>
+                {footer}
+            </div>
+            : <Navigate to="/" />
+    );
+}
+
+export const LeaseListInactive = () => {
+    const { isadmin } = useAuth();
+    const header = Header();
+    const footer = Footer();
+    return (
+        isadmin ?
+            <div>
+                {header}
+                <Link to="/book-leases">
+                    See active
+                </Link>
+
+                <div>
+                    <h1>Leases List</h1>
+                    {LeaseTable(true)}
+                </div>
+                {footer}
+            </div>
+            : <Navigate to="/" />
+    );
 }
 
 //export default LeaseTable;

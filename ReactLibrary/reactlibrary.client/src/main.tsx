@@ -12,7 +12,11 @@ import { LoginForm } from "./LoginComponent.tsx"
 import { RegisterForm } from "./RegisterComponent.tsx"
 import { AuthProvider } from "./shared/AuthProvider.tsx"
 import { UsersList } from "./users/UsersList.tsx"
-import { LeaseList } from "./leases/LeasesList.tsx"
+import { LeaseList, LeaseListInactive } from "./leases/LeasesList.tsx"
+import { UserDetails } from "./users/UserDetails.tsx"
+import { LeaseDetails } from "./leases/LeaseDetails.tsx"
+import { UserLeases } from "./users/UserLeases.tsx"
+import { LeaseEdit } from "./leases/LeaseEdit.tsx"
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
@@ -29,6 +33,11 @@ createRoot(document.getElementById('root')!).render(
                     <Route path='/registration' element={<RegisterForm />} />
                     <Route path='/library-users' element={<UsersList />} />
                     <Route path='/book-leases' element={<LeaseList />} />
+                    <Route path='/book-leases/inactive' element={<LeaseListInactive />} />
+                    <Route path='/user' element={<UserDetails />} />
+                    <Route path='/user-leases' element={<UserLeases />} />
+                    <Route path='/leaseDetails/:leaseId' element={<LeaseDetails />} />
+                    <Route path='/editLease/:leaseId' element={<LeaseEdit />} />
                 </Routes>
             </BrowserRouter>
         </AuthProvider>
