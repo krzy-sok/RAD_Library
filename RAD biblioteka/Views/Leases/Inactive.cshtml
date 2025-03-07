@@ -1,0 +1,59 @@
+﻿@model IEnumerable<RAD_biblioteka.Models.Leases>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.leaseStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.leaseEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.user.userName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Active)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.leaseStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.leaseEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.userName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        <div>
+            <a asp-action="Index">See Active Leases</a>
+        </div>
+    </tbody>
+</table>

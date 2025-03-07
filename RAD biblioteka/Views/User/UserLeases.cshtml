@@ -1,0 +1,59 @@
+﻿@model IEnumerable<RAD_biblioteka.Models.Leases>
+
+@{
+    ViewData["Title"] = "UserLeases";
+}
+
+<h1>User Leases</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.leaseStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.leaseEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.book.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.user.userName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.leaseStart)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.leaseEnd)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.book.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.user.userName)
+                </td>
+                <td>
+                    @{
+                        string version = System.Convert.ToBase64String(item.RowVersion);
+                    }
+                    @if (item.Type == "Reservation"){
+                        <a asp-action="Unlease" asp-route-id="@item.Id" asp-route-version="@version">Revert Reservation</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
